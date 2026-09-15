@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INSAPT — Manuel de Passation des Marchés</title>
+<style>
+:root {
+  --navy: #0D1B33; --panel: #1B2530; --gold: #C9A24B; --goldlt: #E4CD8E;
+  --bg: #F7F8FA; --line: #DCE1E8; --gray: #5B6678; --white: #ffffff;
+  --good: #2E7D32; --warn: #856404; --info: #1565C0;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: Arial, Helvetica, sans-serif; background: var(--bg); color: #2A3441; }
+
+/* ── LANDING ── */
+#landing {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  background: linear-gradient(160deg, var(--navy) 0%, var(--panel) 100%);
+  padding: 40px 20px;
+}
+#landing .badge {
+  font-size: 11px; letter-spacing: 2px; color: var(--gold); font-weight: bold;
+  margin-bottom: 10px; text-align: center;
+}
+#landing h1 {
+  color: var(--white); font-size: 32px; text-align: center;
+  margin-bottom: 8px; line-height: 1.3;
+}
+#landing .sub {
+  color: var(--goldlt); font-size: 16px; text-align: center;
+  margin-bottom: 48px; max-width: 640px;
+}
+.version-cards {
+  display: flex; gap: 28px; flex-wrap: wrap; justify-content: center;
+  max-width: 900px;
+}
+.vcard {
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(201,162,75,0.4);
+  border-radius: 6px; padding: 36px 32px; width: 380px; cursor: pointer;
+  transition: all .2s; text-decoration: none; display: flex; flex-direction: column; gap: 12px;
+}
+.vcard:hover { background: rgba(201,162,75,0.12); border-color: var(--gold); transform: translateY(-3px); }
+.vcard .vtag {
+  font-size: 11px; letter-spacing: 2px; color: var(--gold); font-weight: bold;
+}
+.vcard h2 { color: var(--white); font-size: 20px; line-height: 1.3; }
+.vcard p { color: #8A99B3; font-size: 13px; line-height: 1.6; }
+.vcard .vbtn {
+  margin-top: 10px; background: var(--gold); color: var(--navy);
+  padding: 10px 0; border-radius: 3px; font-weight: bold; font-size: 14px;
+  text-align: center;
+}
+.landing-help {
+  margin-top: 40px; color: #8A99B3; font-size: 13px; cursor: pointer;
+  text-decoration: underline; text-underline-offset: 3px;
+}
+.landing-help:hover { color: var(--goldlt); }
+
+/* ── APP SHELL ── */
+#app { display: none; height: 100vh; display: none; flex-direction: column; }
+#topbar {
+  background: var(--navy); color: var(--white);
+  display: flex; align-items: center; padding: 0 20px; height: 54px;
+  gap: 16px; position: sticky; top: 0; z-index: 100;
+  border-bottom: 2px solid var(--gold);
+}
+#topbar .logo {
+  font-weight: bold; font-size: 14px; color: var(--gold); white-space: nowrap;
+  cursor: pointer; flex-shrink: 0;
+}
+#topbar .version-tag {
+  font-size: 10px; letter-spacing: 1px; color: #8A99B3;
+  background: rgba(255,255,255,0.06); padding: 2px 8px; border-radius: 10px;
+  flex-shrink: 0;
+}
+#searchInput {
+  flex: 1; padding: 7px 14px; border-radius: 20px; border: none;
+  background: rgba(255,255,255,0.1); color: var(--white); font-size: 13px;
+  outline: none; min-width: 0;
+}
+#searchInput::placeholder { color: #8A99B3; }
+#searchInput:focus { background: rgba(255,255,255,0.16); }
+.top-btn {
+  background: none; border: 1px solid rgba(255,255,255,0.2); color: var(--goldlt);
+  padding: 6px 14px; border-radius: 3px; cursor: pointer; font-size: 12px;
+  white-space: nowrap; flex-shrink: 0;
+  transition: background .15s;
+}
+.top-btn:hover { background: rgba(255,255,255,0.1); }
+
+/* ── MAIN LAYOUT ── */
+#main { display: flex; flex: 1; overflow: hidden; }
+
+/* ── SIDEBAR ── */
+#sidebar {
+  width: 270px; flex-shrink: 0; background: var(--white);
+  border-right: 1px solid var(--line); overflow-y: auto;
+  display: flex; flex-direction: column;
+}
+.sidebar-header {
+  padding: 14px 16px 8px; font-size: 10px; font-weight: bold;
+  letter-spacing: 1.5px; color: var(--gray); text-transform: uppercase;
+  border-bottom: 1px solid var(--line); flex-shrink: 0;
+}
+.toc-item {
+  display: flex; align-items: flex-start; gap: 10px;
+  padding: 9px 16px; cursor: pointer; font-size: 13px; line-height: 1.4;
+  border-left: 3px solid transparent; transition: all .15s;
+}
+.toc-item:hover { background: var(--bg); }
+.toc-item.active {
+  background: #EEF3FA; border-left-color: var(--gold); color: var(--navy); font-weight: bold;
+}
+.toc-item .ch-num {
+  flex-shrink: 0; font-size: 10px; font-weight: bold; color: var(--gold);
+  background: var(--navy); width: 22px; height: 22px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; margin-top: 1px;
+}
+.toc-item .ch-title { flex: 1; }
+.toc-progress { height: 3px; background: var(--line); flex-shrink: 0; }
+.toc-progress-fill { height: 100%; background: var(--gold); transition: width .4s; }
+
+/* ── CONTENT AREA ── */
+#content {
+  flex: 1; overflow-y: auto; padding: 0;
+  display: flex; flex-direction: column;
+}
+#searchResults {
+  display: none; padding: 20px 32px; flex: 1;
+}
+#chapterView { flex: 1; display: flex; flex-direction: column; }
+.chapter-header {
+  background: var(--navy); color: var(--white); padding: 28px 40px 24px;
+  position: relative;
+}
+.chapter-header .ch-kicker {
+  font-size: 11px; letter-spacing: 2px; color: var(--gold); font-weight: bold; margin-bottom: 6px;
+}
+.chapter-header h2 {
+  font-size: 24px; line-height: 1.3; margin-bottom: 8px;
+}
+.chapter-header .ch-meta { font-size: 12px; color: #8A99B3; }
+.chapter-nav {
+  display: flex; gap: 0; border-bottom: 1px solid var(--line);
+  flex-shrink: 0; background: var(--white); padding: 0 32px;
+}
+.cnav-tab {
+  padding: 12px 18px; font-size: 13px; cursor: pointer; border-bottom: 2px solid transparent;
+  color: var(--gray); font-weight: bold; transition: all .15s;
+}
+.cnav-tab.active { color: var(--navy); border-bottom-color: var(--gold); }
+.cnav-tab:hover:not(.active) { color: var(--navy); }
+.chapter-body {
+  padding: 32px 40px; max-width: 860px; font-size: 14px; line-height: 1.8;
+  flex: 1;
+}
+.chapter-body pre {
+  white-space: pre-wrap; font-family: Arial, sans-serif; font-size: 14px;
+  line-height: 1.8;
+}
+.chapter-body h3 { color: var(--navy); margin: 24px 0 10px; font-size: 15px; }
+mark { background: #FDEF9A; border-radius: 2px; padding: 0 2px; }
+
+/* ── COMMENT SECTION ── */
+.comment-section {
+  padding: 32px 40px; border-top: 3px solid var(--gold);
+  background: var(--bg); max-width: 860px;
+}
+.comment-section h3 {
+  color: var(--navy); font-size: 17px; margin-bottom: 6px;
+}
+.comment-section .hint {
+  color: var(--gray); font-size: 13px; margin-bottom: 20px;
+}
+.comment-form { display: flex; flex-direction: column; gap: 12px; }
+.form-row { display: flex; gap: 12px; }
+.form-row input, .cf-select {
+  flex: 1; padding: 9px 12px; border: 1px solid var(--line); border-radius: 4px;
+  font-family: Arial; font-size: 13px; background: var(--white);
+}
+.cf-label { font-size: 12px; font-weight: bold; color: var(--navy); margin-bottom: 3px; }
+.cf-group { display: flex; flex-direction: column; gap: 3px; flex: 1; }
+textarea.cf-ta {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--line); border-radius: 4px;
+  font-family: Arial; font-size: 13px; resize: vertical; min-height: 90px;
+  background: var(--white);
+}
+.cf-submit {
+  background: var(--navy); color: var(--white); border: none; padding: 10px 24px;
+  border-radius: 4px; cursor: pointer; font-size: 14px; font-weight: bold;
+  align-self: flex-start; transition: background .15s;
+}
+.cf-submit:hover { background: #1a3055; }
+.comment-list { margin-top: 24px; display: flex; flex-direction: column; gap: 12px; }
+.comment-card {
+  background: var(--white); border: 1px solid var(--line); border-radius: 4px;
+  padding: 14px 16px; border-left: 4px solid var(--gold);
+}
+.comment-card .cmeta {
+  font-size: 11px; color: var(--gray); margin-bottom: 6px;
+}
+.comment-card .ctype {
+  display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px;
+  font-weight: bold; margin-left: 8px; text-transform: uppercase;
+}
+.ctype-suggestion { background: #E3F0E3; color: var(--good); }
+.ctype-question { background: #E3EDF8; color: var(--info); }
+.ctype-concern { background: #FDF3E3; color: var(--warn); }
+.comment-card .ctext { font-size: 13px; line-height: 1.6; }
+.comment-card .creason { font-size: 12px; color: var(--gray); margin-top: 6px; font-style: italic; }
+
+/* ── HELP PANEL ── */
+#helpPanel {
+  display: none; position: fixed; top: 0; right: 0; height: 100vh;
+  width: 420px; background: var(--white); box-shadow: -4px 0 24px rgba(0,0,0,0.15);
+  z-index: 200; overflow-y: auto; flex-direction: column;
+}
+#helpPanel.open { display: flex; }
+.help-header {
+  background: var(--navy); color: var(--white); padding: 20px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  flex-shrink: 0;
+}
+.help-header h2 { font-size: 18px; color: var(--gold); }
+.help-close {
+  background: none; border: none; color: var(--white); font-size: 22px;
+  cursor: pointer; line-height: 1;
+}
+.help-body { padding: 20px 24px; flex: 1; }
+.help-section { margin-bottom: 24px; }
+.help-section h3 {
+  font-size: 12px; letter-spacing: 1.5px; font-weight: bold; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 12px; padding-bottom: 6px;
+  border-bottom: 1px solid var(--line);
+}
+.ref-link {
+  display: flex; align-items: flex-start; gap: 10px; padding: 8px 0;
+  border-bottom: 1px solid var(--bg); text-decoration: none; color: inherit;
+}
+.ref-link:hover .ref-title { color: var(--navy); text-decoration: underline; }
+.ref-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.ref-title { font-size: 13px; font-weight: bold; color: #2A3441; }
+.ref-desc { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+/* ── SEARCH RESULTS ── */
+.sr-title { font-size: 18px; color: var(--navy); font-weight: bold; margin-bottom: 4px; }
+.sr-count { font-size: 12px; color: var(--gray); margin-bottom: 20px; }
+.sr-card {
+  background: var(--white); border: 1px solid var(--line); border-radius: 4px;
+  padding: 14px 18px; margin-bottom: 10px; cursor: pointer;
+  border-left: 4px solid transparent; transition: all .15s;
+}
+.sr-card:hover { border-left-color: var(--gold); background: #F0F6FF; }
+.sr-card .sr-ch { font-size: 11px; color: var(--gold); font-weight: bold; margin-bottom: 4px; }
+.sr-card .sr-snippet { font-size: 13px; color: var(--gray); line-height: 1.6; }
+
+/* ── PREV/NEXT ── */
+.chapter-nav-btns {
+  display: flex; justify-content: space-between; padding: 20px 40px;
+  border-top: 1px solid var(--line); background: var(--white);
+  max-width: 860px;
+}
+.nav-btn {
+  background: none; border: 1px solid var(--line); padding: 8px 18px;
+  border-radius: 4px; cursor: pointer; font-size: 13px; color: var(--navy);
+  transition: all .15s;
+}
+.nav-btn:hover { background: var(--navy); color: var(--white); border-color: var(--navy); }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* ── TOAST ── */
+#toast {
+  position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(60px);
+  background: var(--good); color: var(--white); padding: 12px 24px;
+  border-radius: 4px; font-size: 14px; font-weight: bold;
+  transition: transform .3s; z-index: 999; pointer-events: none;
+}
+#toast.show { transform: translateX(-50%) translateY(0); }
+
+@media (max-width: 700px) {
+  #sidebar { display: none; }
+  .chapter-body, .comment-section { padding: 20px 18px; }
+  .vcard { width: 100%; }
+  #helpPanel { width: 100%; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══════════════ LANDING ══════════════ -->
+<div id="landing">
+  <div class="badge">AFRICA CDC · KOFI ANNAN GLOBAL HEALTH LEADERSHIP PROGRAMME</div>
+  <h1>Manuel de Politiques et Procédures<br>de Passation des Marchés</h1>
+  <div class="sub">Institut National de Santé Publique du Tchad (INSAPT) — Version 1, Juillet 2026<br>Sélectionnez la version applicable à votre contexte institutionnel.</div>
+
+  <div class="version-cards">
+    <div class="vcard" onclick="openManual('cpa')">
+      <div class="vtag">VERSION A — CIRCUIT CPA</div>
+      <h2>Manuel avec Coordination CPA</h2>
+      <p>Applicable par défaut. Les produits de santé (réactifs, médicaments) sont acquis via la Centrale Pharmaceutique d'Achat, conformément au mandat exclusif confirmé.</p>
+      <div class="vbtn">Ouvrir ce Manuel →</div>
+    </div>
+    <div class="vcard" onclick="openManual('nocpa')">
+      <div class="vtag">VERSION B — PASSATION DIRECTE CPM</div>
+      <h2>Manuel Passation Directe</h2>
+      <p>Applicable uniquement si une dérogation gouvernementale formelle est accordée à l'INSAPT par le Ministère de la Santé Publique et de la Prévention.</p>
+      <div class="vbtn">Ouvrir ce Manuel →</div>
+    </div>
+  </div>
+
+  <div class="landing-help" onclick="openHelp()">❓ Aide & Références Réglementaires</div>
+</div>
+
+<!-- ══════════════ APP ══════════════ -->
+<div id="app">
+  <div id="topbar">
+    <div class="logo" onclick="goHome()">🏛 INSAPT</div>
+    <div class="version-tag" id="versionTag">—</div>
+    <input type="text" id="searchInput" placeholder="🔍 Rechercher dans le manuel..." oninput="onSearch(this.value)">
+    <button class="top-btn" onclick="switchVersion()">Changer de version</button>
+    <button class="top-btn" onclick="openHelp()">❓ Aide & Références</button>
+    <button class="top-btn" onclick="goHome()">← Accueil</button>
+  </div>
+
+  <div id="main">
+    <div id="sidebar">
+      <div class="sidebar-header">Table des Matières</div>
+      <div class="toc-progress"><div class="toc-progress-fill" id="progressFill" style="width:0%"></div></div>
+      <div id="tocList"></div>
+    </div>
+
+    <div id="content">
+      <!-- Search Results -->
+      <div id="searchResults">
+        <div class="sr-title">Résultats de recherche</div>
+        <div class="sr-count" id="srCount"></div>
+        <div id="srList"></div>
+      </div>
+
+      <!-- Chapter View -->
+      <div id="chapterView">
+        <div class="chapter-header">
+          <div class="ch-kicker" id="chKicker">CHAPITRE</div>
+          <h2 id="chTitle">—</h2>
+          <div class="ch-meta" id="chMeta"></div>
+        </div>
+        <div class="chapter-nav">
+          <div class="cnav-tab active" onclick="showTab('content')">📄 Contenu</div>
+          <div class="cnav-tab" onclick="showTab('comments')">💬 Commentaires & Suggestions</div>
+        </div>
+        <div id="tabContent">
+          <div class="chapter-body" id="chBody"></div>
+          <div class="chapter-nav-btns">
+            <button class="nav-btn" id="btnPrev" onclick="navChapter(-1)">← Chapitre Précédent</button>
+            <button class="nav-btn" id="btnNext" onclick="navChapter(1)">Chapitre Suivant →</button>
+          </div>
+        </div>
+        <div id="tabComments" style="display:none">
+          <div class="comment-section">
+            <h3>💬 Vos Commentaires & Suggestions</h3>
+            <div class="hint">Vos contributions sont précieuses pour améliorer ce manuel. Indiquez votre nom, le type de retour, votre commentaire et la justification. Toutes les contributions sont enregistrées localement.</div>
+            <div class="comment-form">
+              <div class="form-row">
+                <div class="cf-group">
+                  <div class="cf-label">Nom Complet *</div>
+                  <input type="text" id="cfName" placeholder="Ex : Dr. Amadou Mahamat">
+                </div>
+                <div class="cf-group">
+                  <div class="cf-label">Service / Unité</div>
+                  <input type="text" id="cfService" placeholder="Ex : LNSP / Direction Générale">
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="cf-group">
+                  <div class="cf-label">Email (optionnel — pour suivi)</div>
+                  <input type="email" id="cfEmail" placeholder="votre.email@insapt.td">
+                </div>
+                <div class="cf-group">
+                  <div class="cf-label">Type de Contribution</div>
+                  <select class="cf-select" id="cfType">
+                    <option value="suggestion">💡 Suggestion d'amélioration</option>
+                    <option value="question">❓ Question de clarification</option>
+                    <option value="concern">⚠️ Point de préoccupation</option>
+                  </select>
+                </div>
+              </div>
+              <div class="cf-group">
+                <div class="cf-label">Commentaire / Recommandation de Modification *</div>
+                <textarea class="cf-ta" id="cfComment" placeholder="Décrivez précisément votre commentaire ou la modification que vous recommandez. Si possible, indiquez le numéro de section concerné (ex : Section 3.2, SOP R-2)..."></textarea>
+              </div>
+              <div class="cf-group">
+                <div class="cf-label">Justification / Contexte (Pourquoi ce changement est-il nécessaire ?)</div>
+                <textarea class="cf-ta" id="cfReason" placeholder="Ex : Cette procédure entre en contradiction avec l'article 8 du Décret N°002130/PR/2020 / Elle est inapplicable dans notre contexte car... / Expérience terrain montrant que..." style="min-height:70px"></textarea>
+              </div>
+              <button class="cf-submit" onclick="submitComment()">Soumettre ma contribution</button>
+            </div>
+            <div class="comment-list" id="commentList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ HELP PANEL ══════════════ -->
+<div id="helpPanel">
+  <div class="help-header">
+    <h2>❓ Aide & Références</h2>
+    <button class="help-close" onclick="closeHelp()">×</button>
+  </div>
+  <div class="help-body">
+
+    <div class="help-section">
+      <h3>À propos de ce Manuel</h3>
+      <p style="font-size:13px; line-height:1.7; color:#444; margin-bottom:10px;">
+        Ce manuel est produit dans le cadre du déploiement Africa CDC KA-GHLP à l'INSAPT. Il existe en deux versions : la Version CPA (circuit par défaut) et la Version Passation Directe CPM (applicable uniquement en cas de dérogation gouvernementale formelle).
+      </p>
+      <p style="font-size:13px; line-height:1.7; color:#444;">
+        Consultant : <strong>Innocent Forteh</strong>, Spécialiste en Passation des Marchés (Chercheur) — <a href="mailto:team21online@gmail.com" style="color:var(--navy)">team21online@gmail.com</a>
+      </p>
+    </div>
+
+    <div class="help-section">
+      <h3>Législation Nationale — Tchad</h3>
+      <a class="ref-link" href="https://www.armp-tchad.td" target="_blank">
+        <span class="ref-icon">⚖️</span>
+        <div>
+          <div class="ref-title">Code des Marchés Publics — Décret N°002130/PR/2020</div>
+          <div class="ref-desc">Texte de base applicable à toutes les acquisitions de l'INSAPT — ARMP Tchad</div>
+        </div>
+      </a>
+      <div class="ref-link" style="cursor:default">
+        <span class="ref-icon">📊</span>
+        <div>
+          <div class="ref-title">Seuils de Passation des Marchés — Décret N°2499/PR/2020</div>
+          <div class="ref-desc">Seuils applicables : Travaux 50M FCFA, Fournitures/Services 30M FCFA, Prestations intellectuelles 20M FCFA</div>
+        </div>
+      </div>
+      <div class="ref-link" style="cursor:default">
+        <span class="ref-icon">🏛️</span>
+        <div>
+          <div class="ref-title">Statut de l'INSAPT — Loi N°011/PR/2020 & Décret N°2624/PR/PM/MSPP/2023</div>
+          <div class="ref-desc">Loi portant création de l'INSAPT et décret d'organisation et de fonctionnement</div>
+        </div>
+      </div>
+      <div class="ref-link" style="cursor:default">
+        <span class="ref-icon">💊</span>
+        <div>
+          <div class="ref-title">Mandat CPA — Loi N°33/PR/94 & Décret N°1583/PR/MSP/2015</div>
+          <div class="ref-desc">Textes régissant le mandat exclusif de la Centrale Pharmaceutique d'Achat</div>
+        </div>
+      </div>
+      <div class="ref-link" style="cursor:default">
+        <span class="ref-icon">🔍</span>
+        <div>
+          <div class="ref-title">Bénéficiaires Effectifs — Décret N°0104/PT/PM/SGG/2022</div>
+          <div class="ref-desc">Obligations de déclaration des bénéficiaires effectifs pour les soumissionnaires</div>
+        </div>
+      </div>
+      <div class="ref-link" style="cursor:default">
+        <span class="ref-icon">🌐</span>
+        <div>
+          <div class="ref-title">Financement Extérieur — Décret N°0022/PR/PM/SGG/2024</div>
+          <div class="ref-desc">Règles dérogatoires applicables aux marchés financés sur crédits internationaux</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="help-section">
+      <h3>Partenaires Techniques & Financiers</h3>
+      <a class="ref-link" href="https://africacdc.org" target="_blank">
+        <span class="ref-icon">🌍</span>
+        <div>
+          <div class="ref-title">Africa CDC — Kofi Annan GH Leadership Programme (KA-GHLP)</div>
+          <div class="ref-desc">Programme cadre du présent déploiement INSAPT</div>
+        </div>
+      </a>
+      <a class="ref-link" href="https://www.who.int/publications/i/item/9789241547512" target="_blank">
+        <span class="ref-icon">🏥</span>
+        <div>
+          <div class="ref-title">OMS — Bonnes Pratiques de Passation des Marchés (BPPM)</div>
+          <div class="ref-desc">Référentiel international pour la sélection des médicaments et réactifs</div>
+        </div>
+      </a>
+      <a class="ref-link" href="https://www.theglobalfund.org/en/sourcing-management/" target="_blank">
+        <span class="ref-icon">💰</span>
+        <div>
+          <div class="ref-title">Fonds Mondial — Politiques d'Approvisionnement</div>
+          <div class="ref-desc">Règles applicables aux achats financés par le Fonds Mondial (~60% réactifs urgence INSAPT)</div>
+        </div>
+      </a>
+      <a class="ref-link" href="https://ppfd.worldbank.org/" target="_blank">
+        <span class="ref-icon">🏦</span>
+        <div>
+          <div class="ref-title">Banque Mondiale — Cadre de Passation des Marchés (2016)</div>
+          <div class="ref-desc">Non-objection requise en revue préalable ; plateforme STEP</div>
+        </div>
+      </a>
+      <a class="ref-link" href="https://intpa.ec.europa.eu/funding-opportunities/procurement_en" target="_blank">
+        <span class="ref-icon">🇪🇺</span>
+        <div>
+          <div class="ref-title">Union Européenne — PRAG (Guide Pratique)</div>
+          <div class="ref-desc">Non-objection Délégation UE avant attribution ; règles d'origine</div>
+        </div>
+      </a>
+      <a class="ref-link" href="https://www.afd.fr" target="_blank">
+        <span class="ref-icon">🇫🇷</span>
+        <div>
+          <div class="ref-title">AFD — Politiques d'Approvisionnement</div>
+          <div class="ref-desc">Aide totalement déliée ; Déclaration d'Intégrité obligatoire</div>
+        </div>
+      </a>
+    </div>
+
+    <div class="help-section">
+      <h3>Documents de Référence INSAPT</h3>
+      <div class="ref-link" style="cursor:default">
+        <span class="ref-icon">📋</span>
+        <div>
+          <div class="ref-title">D12 — Cadre de Planification Annuelle des Marchés</div>
+          <div class="ref-desc">Méthodologie de prévision, calendrier, module réactifs</div>
+        </div>
+      </div>
+      <div class="ref-link" style="cursor:default">
+        <span class="ref-icon">📊</span>
+        <div>
+          <div class="ref-title">D13 — Modèle de Plan Annuel (PPM)</div>
+          <div class="ref-desc">Classeur Excel — saisie des besoins prévisionnels, double scénario CPA/CPM</div>
+        </div>
+      </div>
+      <div class="ref-link" style="cursor:default">
+        <span class="ref-icon">🧪</span>
+        <div>
+          <div class="ref-title">D14 — Modèle de Planification des Réactifs</div>
+          <div class="ref-desc">Formule de prévision fondée sur la consommation, plafond anti-péremption</div>
+        </div>
+      </div>
+      <div class="ref-link" style="cursor:default">
+        <span class="ref-icon">📝</span>
+        <div>
+          <div class="ref-title">D21 — Registre des Risques de Passation des Marchés</div>
+          <div class="ref-desc">21 risques cotés — 14 généraux + 7 spécifiques aux réactifs</div>
+        </div>
+      </div>
+      <div class="ref-link" style="cursor:default">
+        <span class="ref-icon">🛡️</span>
+        <div>
+          <div class="ref-title">D23 — Cadre de Contrôle Interne FINAL</div>
+          <div class="ref-desc">Contrôles par étape du cycle, y compris contrôles spécifiques réactifs</div>
+        </div>
+      </div>
+      <div class="ref-link" style="cursor:default">
+        <span class="ref-icon">📚</span>
+        <div>
+          <div class="ref-title">D20 — Plateforme E-Learning Proc-INSAPT</div>
+          <div class="ref-desc">10 modules, 4 niveaux de certification, 20 questions par examen</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="help-section">
+      <h3>Administration — Accès Admin</h3>
+      <p style="font-size:13px; line-height:1.7; color:#444; margin-bottom:12px;">
+        Les administrateurs autorisés peuvent examiner, approuver ou rejeter les commentaires soumis, ajouter des notes de décision et exporter les contributions au format CSV pour traitement.
+      </p>
+      <div class="ref-link" id="adminLink" onclick="openAdminPanel()" style="cursor:pointer;">
+        <span class="ref-icon">🔐</span>
+        <div>
+          <div class="ref-title">Tableau de Bord Administration</div>
+          <div class="ref-desc">Accès protégé par mot de passe — Gestion des commentaires et révisions du manuel</div>
+        </div>
+      </div>
+    </div>
+      <p style="font-size:13px; line-height:1.7; color:#444;">
+        <strong>Naviguer :</strong> cliquez sur un chapitre dans la barre latérale gauche.<br>
+        <strong>Rechercher :</strong> tapez un terme dans la barre de recherche en haut — les résultats apparaissent instantanément avec le texte correspondant mis en évidence.<br>
+        <strong>Commenter :</strong> à la fin de chaque chapitre, cliquez sur l'onglet « Commentaires & Suggestions » pour soumettre vos retours. Vos contributions sont sauvegardées dans votre navigateur.<br>
+        <strong>Changer de version :</strong> cliquez sur « Changer de version » dans la barre en haut pour basculer entre la version CPA et la version Passation Directe.
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<div id="toast">✓ Contribution enregistrée avec succès !</div>
+
+<!-- ══════════════ ADMIN LOGIN MODAL ══════════════ -->
+<div id="adminModal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:300; align-items:center; justify-content:center;">
+  <div style="background:#fff; border-radius:6px; padding:40px 48px; width:380px; box-shadow:0 10px 40px rgba(0,0,0,0.4);">
+    <h2 style="color:var(--navy); font-size:20px; margin-bottom:6px;">🔐 Accès Administration</h2>
+    <p style="color:var(--gray); font-size:13px; margin-bottom:24px;">Manuel de Passation des Marchés — INSAPT</p>
+    <div style="margin-bottom:12px;">
+      <div style="font-size:12px; font-weight:bold; color:var(--navy); margin-bottom:4px;">Identifiant</div>
+      <input type="text" id="aUser" placeholder="admin@insapt" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:4px;font-size:14px;">
+    </div>
+    <div style="margin-bottom:16px;">
+      <div style="font-size:12px; font-weight:bold; color:var(--navy); margin-bottom:4px;">Mot de Passe</div>
+      <input type="password" id="aPass" placeholder="••••••" style="width:100%;padding:9px 12px;border:1px solid var(--line);border-radius:4px;font-size:14px;" onkeydown="if(event.key==='Enter')doAdminLogin()">
+    </div>
+    <div id="aErr" style="color:#B23A3A; font-size:12px; margin-bottom:10px; display:none;">Identifiants incorrects.</div>
+    <div style="display:flex; gap:10px;">
+      <button onclick="doAdminLogin()" style="flex:1;background:var(--navy);color:#fff;border:none;padding:10px;border-radius:4px;font-size:14px;font-weight:bold;cursor:pointer;">Connexion</button>
+      <button onclick="closeAdminModal()" style="background:none;border:1px solid var(--line);padding:10px 16px;border-radius:4px;cursor:pointer;font-size:14px;">Annuler</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ──
+const CPA_CHAPTERS = [{"num": 1, "title": "PRÉAMBULE", "content": "CHAPITRE 1 — PRÉAMBULE\n 1.1 Introduction\nL'Institut National de Santé Publique du Tchad (INSAPT) est un Établissement Public à caractère\nScientifique et Technique (EPST) doté de la personnalité morale et de l'autonomie de gestion, créé par la\nLoi N°011/PR/2020 du 10 juillet 2020 et organisé par le Décret N°2624/PR/PM/MSPP/2023 du 18\nseptembre 2023. Il regroupe notamment la Direction Générale, le Centre de Veille Sanitaire (CVS), le\nLaboratoire National de Santé Publique (LNSP) et le Centre des Opérations d'Urgence en Santé Publique\n(COUSP).\nEn tant qu'EPST, l'INSAPT est assujetti au Code des Marchés Publics du Tchad (Décret\nN°002130/PR/2020) pour l'ensemble de ses acquisitions financées sur fonds publics, tout en disposant\nd'une autonomie de gestion administrative et financière reconnue par ses textes statutaires : le Directeur\nGénéral signe les marchés en qualité d'Autorité Contractante, l'Institut constitue et préside sa propre\nCommission de Passation des Marchés (CPM) et gère son propre Plan de Passation des Marchés (PPM).\nUne distinction fondamentale structure l'ensemble du présent manuel : l'approvisionnement en produits\nde santé — médicaments, réactifs de laboratoire, dispositifs médicaux et autres produits pharmaceutiques\n— relève du canal exclusif de la Centrale Pharmaceutique d'Achat (CPA), unique structure nationale\nlégalement chargée de cette mission. Les acquisitions de biens hors produits de santé, de services, de\ntravaux et de prestations intellectuelles suivent le circuit de passation directe décrit dans le présent\nmanuel, sous l'autorité de l'INSAPT.\n1.2 Objet du Manuel\nLe présent Manuel de Politiques et Procédures de Passation des Marchés a pour objet de :\n  Établir un cadre unique, cohérent et opposable régissant l'ensemble des acquisitions de\n l'INSAPT, quelle que soit la source de financement (budget de l'État, ressources propres,\n financement de Partenaires Techniques et Financiers) ;\n  Traduire en procédures opérationnelles concrètes les exigences du Code des Marchés Publics\n du Tchad et des textes statutaires de l'INSAPT ;\n  Préciser l'articulation entre la procédure nationale de passation des marchés et le canal exclusif\n de la CPA pour les produits de santé ;\n  Fournir au personnel de l'INSAPT des outils, modèles et procédures normalisées (SOP)\n garantissant la cohérence, la traçabilité et l'auditabilité de chaque acquisition ;\n  Intégrer les exigences spécifiques des principaux partenaires techniques et financiers de\n l'INSAPT.\n1.3 Champ d'Application et Limites du Manuel\nLe présent manuel s'applique à :\n  Toutes les acquisitions de biens (hors produits de santé relevant de la CPA), services, travaux et\n prestations intellectuelles financées sur le budget de l'État alloué à l'INSAPT ;\n  Toutes les acquisitions financées sur ressources propres de l'INSAPT, conformément à l'Article 4\n du Décret N°002130/PR/2020 ;\n  Toutes les acquisitions réalisées dans le cadre de projets financés par des Partenaires\n Techniques et Financiers (PTF), sous réserve des dispositions particulières du Chapitre 18 ;\n  L'interface et les obligations de coordination de l'INSAPT avec la CPA pour l'ensemble des\n produits de santé (Chapitre 3) ;\n  Tout le personnel de l'INSAPT impliqué dans des fonctions d'expression de besoin, de\n préparation, d'évaluation, d'approbation ou d'autorisation de marchés ;\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f Les prestataires, fournisseurs et entrepreneurs externes de l'INSAPT, dans la mesure où ils\n contractent avec l'Institut.\nLimites : lorsqu'une convention, un accord ou un protocole signé entre l'INSAPT et un partenaire technique\net financier comporte des dispositions plus contraignantes que le présent manuel, ces dispositions\nprévalent pour les acquisitions financées par ce partenaire, conformément au principe de superposition\ndes règles énoncé au Chapitre 18.1. Le présent manuel ne se substitue pas aux textes légaux et\nréglementaires qu'il met en œuvre ; en cas de divergence d'interprétation, le Code des Marchés Publics\net les textes statutaires de l'INSAPT font foi.\n1.4 Révisions du Manuel\nLe présent manuel est un document vivant, appelé à évoluer avec les textes légaux et réglementaires\napplicables, les orientations institutionnelles de l'INSAPT et les enseignements tirés de sa mise en œuvre.\nToute révision est initiée par le Service de Passation des Marchés (SPM), validée par la Direction Générale\net fait l'objet d'une nouvelle version numérotée, accompagnée d'une note de révision précisant la nature\ndes changements et les sections concernées. La version en vigueur est celle publiée sur les canaux\nofficiels internes de l'INSAPT ; toute version antérieure est réputée caduque dès l'approbation de la\nnouvelle version.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 2, "title": "CONSIDÉRATIONS GÉNÉRALES", "content": "CHAPITRE 2 — CONSIDÉRATIONS GÉNÉRALES\n 2.1 Principes de Passation des Marchés\nToute acquisition conduite par l'INSAPT, quel qu'en soit le montant ou la source de financement, obéit aux\nprincipes fondamentaux énoncés par le Code des Marchés Publics du Tchad (Décret\nN°002130/PR/2020) :\n  Économie et efficacité — obtenir la meilleure valeur pour l'argent public, en tenant compte du\n prix, de la qualité, des délais et des coûts sur le cycle de vie ;\n  Libre accès à la commande publique et égalité de traitement des candidats — aucune\n discrimination fondée sur la nationalité, la taille ou l'origine du soumissionnaire, hors dispositions\n légales de préférence nationale ;\n  Transparence des procédures — publicité adéquate des avis, des critères d'évaluation et des\n résultats d'attribution ;\n  Mise en concurrence effective — recours systématique à la méthode de sélection compétitive\n correspondant au montant et à la nature du besoin ;\n  Intégrité et redevabilité — traçabilité documentaire de chaque décision et responsabilité\n individuelle des agents impliqués.\n2.2 Séparation des Tâches\nAucune personne ne peut cumuler, pour une même acquisition, plus d'une des fonctions suivantes :\nexpression du besoin, préparation du dossier de consultation, évaluation des offres, décision d'attribution,\nordonnancement du paiement et réception des biens ou services. Cette séparation des tâches est mise\nen œuvre à travers la Matrice RACI de la Passation des Marchés (Chapitre 4.4) et la composition\npluridisciplinaire de la Commission de Passation des Marchés (Chapitre 4.3). Elle constitue une garantie\nstructurelle contre la fraude, la collusion et les conflits d'intérêts, indépendamment de l'intégrité individuelle\ndes agents concernés.\n2.3 Transparence, Redevabilité et Éthique\nL'INSAPT s'engage à conduire ses acquisitions dans des conditions de transparence permettant à tout\ncandidat, à l'ARMP et à tout partenaire technique et financier de vérifier la régularité de la procédure\nsuivie. Chaque agent impliqué dans la passation des marchés est individuellement redevable des\ndécisions qu'il prend ou recommande, et doit être en mesure d'en justifier le fondement documentaire. Le\ndispositif de recours interne et externe (Chapitre 16.4) et le mécanisme de signalement (Chapitre 16.3,\nAnnexe T) garantissent que tout manquement à ces principes puisse être signalé, instruit et sanctionné.\n2.4 Code de Déontologie\nTout agent de l'INSAPT impliqué dans la passation des marchés s'engage à :\n  Agir avec intégrité, impartialité et probité dans l'exercice de ses fonctions ;\n  Traiter tous les candidats et titulaires avec équité, sans favoritisme ni discrimination ;\n  Préserver la confidentialité des informations sensibles (offres, évaluations, données financières)\n jusqu'à leur publication autorisée ;\n  Déclarer sans délai tout conflit d'intérêts, réel, potentiel ou apparent, et se retirer du processus\n décisionnel concerné ;\n  Refuser tout avantage, cadeau, faveur ou paiement susceptible d'influencer, ou de paraître\n influencer, une décision de passation de marché ;\n  Signaler toute irrégularité, tentative de corruption ou pression indue dont il aurait connaissance,\n par les canaux prévus au Chapitre 16.3.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f2.5 Exemples de Comportements Non-Éthiques\nSans que cette liste soit exhaustive, constituent notamment des manquements graves à la déontologie de\nla passation des marchés :\n  La sollicitation, l'acceptation ou l'offre de pots-de-vin, commissions occultes ou avantages en\n nature en lien avec un marché ;\n  La divulgation anticipée d'informations confidentielles (montant estimatif, contenu d'une offre\n concurrente, critères d'évaluation non publiés) à un candidat ;\n  La manipulation des spécifications techniques ou des critères d'évaluation en faveur d'un\n candidat déterminé ;\n  La collusion entre soumissionnaires ou entre un agent de l'INSAPT et un soumissionnaire\n (trucage des offres) ;\n  La participation à une décision d'attribution alors qu'il existe un lien familial, capitalistique ou\n hiérarchique non déclaré avec un candidat ;\n  Le fractionnement délibéré d'un besoin dans le but de se soustraire aux seuils de mise en\n concurrence ou de contrôle ;\n  La falsification, l'antidatation ou la destruction de pièces du dossier de marché.\n2.6 Obligations des Agents\nTout agent participant, à quelque titre que ce soit, à une procédure de passation de marché a l'obligation\nde :\n  Signer, le cas échéant, une déclaration d'absence de conflit d'intérêts avant toute participation à\n l'évaluation ou à la décision d'attribution ;\n  Respecter scrupuleusement les seuils, méthodes et délais fixés par le Code des Marchés\n Publics et le présent manuel ;\n  Documenter et archiver chaque étape de la procédure conformément aux exigences de\n traçabilité du Chapitre 17.2 ;\n  Se conformer aux instructions de la Commission de Passation des Marchés et de la Direction\n Générale, sauf instruction manifestement contraire à la loi, auquel cas il a le devoir de la signaler\n ;\n  Coopérer pleinement avec tout audit, contrôle ou enquête portant sur une procédure à laquelle il\n a participé.\nTout manquement aux obligations du présent chapitre expose son auteur aux sanctions disciplinaires,\nadministratives et, le cas échéant, pénales prévues par le Code des Marchés Publics, le Code Pénal"}, {"num": 3, "title": "CADRE DE COORDINATION AVEC LA", "content": "CHAPITRE 3 — CADRE DE COORDINATION AVEC LA\n CENTRALE PHARMACEUTIQUE D'ACHAT (CPA)\n3.1 Statut et Mandat de la CPA\nLa Centrale Pharmaceutique d'Achat (CPA) est l'unique structure nationale chargée de l'approvisionnement\ndu secteur public tchadien en médicaments, réactifs de laboratoire, dispositifs médicaux et autres produits de\nsanté. Ce mandat exclusif est établi par les textes réglementaires nationaux en vigueur, laquelle précise :\n  Le Tchad dispose d'une chaîne nationale unique d'approvisionnement pour l'ensemble des structures\n publiques en ce qui concerne les médicaments, les réactifs et les autres produits de santé\n  Cette mission est assurée par la Centrale Pharmaceutique d'Achat (CPA), qui constitue l'unique\n structure nationale chargée de l'approvisionnement du secteur public\n  La CPA dispose des textes réglementaires, des procédures de préqualification des fournisseurs et\n des laboratoires, et de l'ensemble des mécanismes nécessaires à la gestion de la chaîne\n d'approvisionnement conformément aux dispositions nationales en vigueur\n3.2 Périmètre des Produits Relevant de la CPA\n CANAL\n CATÉGORIE DE PRODUIT EXEMPLES POUR L'INSAPT/LNSP\n D'APPROVISIONNEMENT\nMédicaments Médicaments à usage interne (soins du CPA exclusivement\n personnel, trousse d'urgence)\nRéactifs de laboratoire Réactifs PCR, milieux de culture, kits de CPA — ou dérogation documentée\n diagnostic rapide, réactifs immunologiques (voir 1B.5)\nDispositifs médicaux Kits ELISA, bandelettes, lecteurs d'automates CPA — ou dérogation documentée\n diagnostiques in vitro\nConsommables Tubes, aiguilles, seringues, boîtes de Pétri CPA pour les consommables à\n médicaux/biologiques stériles usage clinique/biologique\nProduits chimiques à usage Réactifs purement chimiques sans usage INSAPT directement (procédures\n analytique non-médical diagnostique (ex. solvants techniques) du présent manuel)\nÉquipements de laboratoire Automates, centrifugeuses, hottes de sécurité INSAPT directement (procédures\n (non consommables) biologique du présent manuel)\n3.3 Procédure de Commande via la CPA\nPour tout produit relevant du mandat de la CPA, l'INSAPT suit la procédure suivante :\nÉTAPE ACTION RESPONSABLE INSAPT DOCUMENT\n1 Expression et validation du Directeur LNSP / Chef de service technique Formulaire de\n besoin Demande\n d'Acquisition FDA\n (Annexe 1.B) —\n adapté CPA\n2 Certification budgétaire Agence Comptable Bon de Réservation\n de Crédits (BRC)\n3 Transmission de la commande Service Passation des Marchés (SPM) Formulaire de\n à la CPA Commande CPA\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fÉTAPE ACTION RESPONSABLE INSAPT DOCUMENT\n(Annexe N) + FDA +\n BRC\n4 Suivi de la commande auprès SPM / Directeur LNSP Fiche de Suivi CPA\n de la CPA (Annexe N, Section\n 3)\n5 Réception des produits livrés Directeur LNSP / Gestionnaire de Stock PVIR (Annexe 5.B) +\n par la CPA Fiche Chaîne du\n Froid (Annexe 5.E)\n6 Paiement à la CPA Agence Comptable Facture CPA + PVIR\n signé\n7 Archivage SPM Dossier complet\n conservé 10 ans\n3.4 Droits et Obligations de l'INSAPT dans le Cadre CPA\nEn tant qu'entité publique bénéficiaire du système d'approvisionnement de la CPA, l'INSAPT :\n  A le droit d'accès aux listes de produits disponibles au catalogue de la CPA, aux prix de référence et\n aux délais de livraison indicatifs\n  Peut soumettre des spécifications techniques pour les réactifs spécialisés non standards, qui seront\n transmises à la CPA pour intégration dans ses dossiers de préqualification\n  Peut participer, par voie de représentation technique, aux processus de préqualification des\n fournisseurs et des laboratoires conduits par la CPA, dans les limites des procédures CPA\n  A l'obligation de canaliser toute commande de produits de santé relevant du mandat CPA\n exclusivement par ce canal, sous peine d'irrégularité budgétaire\n  A l'obligation d'informer la CPA de tout incident de qualité (produit non-conforme, rupture de chaîne\n du froid) constaté lors de la réception de produits CPA\n  A l'obligation de conserver les dossiers de commande CPA pendant 10 ans conformément au\n Chapitre 17.2 du présent manuel\n3.5 Procédure de Dérogation au Canal CPA\n DÉROGATION STRICTEMENT ENCADRÉE : Le recours à l'approvisionnement direct hors CPA pour des produits\n relevant du mandat CPA n'est admis que dans des circonstances exceptionnelles strictement définies et documentées,\n avec notification formelle à la CPA et à l'autorité de tutelle.\n\nUne dérogation temporaire au canal CPA peut être accordée par la Direction Générale de l'INSAPT dans les\nseuls cas suivants :\n  Indisponibilité avérée et documentée du produit au catalogue CPA avec délai de rupture supérieur au\n délai critique pour les activités de l'INSAPT\n  Urgence sanitaire déclarée (activation du COUSP) nécessitant un délai de livraison inférieur à celui\n que la CPA peut garantir\n  Financement PTF imposant un fournisseur ou un circuit d'approvisionnement spécifique incompatible\n avec le canal CPA (documenter dans l'Addendum PTF, Annexe U)\n\nToute dérogation doit être :\n  Approuvée par écrit par le Directeur Général de l'INSAPT\n  Notifiée formellement à la CPA avant l'engagement de toute procédure d'approvisionnement direct\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f"}, {"num": 4, "title": "GOUVERNANCE & RÔLES", "content": "CHAPITRE 4 — GOUVERNANCE & RÔLES\n 4.1 Structure de Gouvernance des Marchés\nConformément à la Loi N°011/PR/2020 et au Décret N°2624/PR/PM/MSPP/2023 portant organisation et\nfonctionnement de l'INSAPT, la gouvernance des marchés publics de l'Institut s'organise autour de quatre\nniveaux décisionnels. En sa qualité d'EPST, l'INSAPT jouit d'une autonomie de gestion lui permettant de\nconstituer ses propres organes de passation des marchés, dans le strict respect du Décret\nN°002130/PR/2020 (Code des Marchés Publics).\n4.2 Organes d'Administration Impliqués\n ORGANE RÔLE EN MATIÈRE DE MARCHÉS NIVEAU D'AUTORISATION\nConseil d'Administration Approbation des marchés de grande envergure, Avis préalable requis pour marchés >\n validation de la politique d'acquisition, supervision 50 000 000 FCFA (Art. 15 Décret\n des audits 2624)\nDirection Générale (DG) Autorité Contractante de l'INSAPT en vertu du Approbation finale de tous les\n Décret N°2624/PR/PM/MSPP/2023, signature des marchés dans les seuils légaux\n marchés, supervision de la conformité CPA et Code\n CMP\nSecrétariat Général Coordination administrative, archivage, Visa administratif — tous marchés\n correspondances officielles y compris avec la CPA\n et l'ARMP\nService Passation des Gestion opérationnelle de toutes les procédures Instruction de tous les marchés ;\n Marchés (SPM) d'acquisition et de coordination CPA ; point focal point de contact CPA\n ARMP\nAgence Comptable / Disponibilité budgétaire, engagement financier, Certification de disponibilité des\n Finance paiement des fournisseurs et de la CPA crédits avant tout engagement\nResponsables Expression des besoins, spécifications techniques, Validation des spécifications FSR et\n Techniques (CVS, réception des livraisons CPA et non-CPA des bons de réception\n LNSP, CFRSP)\nAudit Interne Contrôle a posteriori, vérification de la conformité Contrôle indépendant — sans\n CPA et CMP, rapports d'audit pouvoir d'approbation\n4.3 Commission de Passation des Marchés (CPM)\n FONDEMENT LÉGAL : Conformément aux Articles 31 à 44 du Décret N°002130/PR/2020 (Code des Marchés\n Publics), tout établissement public assujetti au Code doit constituer une Commission de Passation des Marchés (CPM)\n pour les marchés dépassant les seuils de la procédure simplifiée. L'INSAPT, en tant qu'EPST, constitue et préside sa\n propre CPM.\n\n4.3.1 Composition de la CPM\n  Président : Directeur Général ou son représentant dûment mandaté\n  Membre : Responsable du Service Passation des Marchés (Secrétaire de la CPM)\n  Membre : Responsable Financier (Agence Comptable)\n  Membre : Expert technique du domaine concerné (CVS, LNSP ou CFRSP selon objet du marché)\n  Membre : Représentant de l'Administration de tutelle technique (Ministère de la Santé Publique et de\n la Prévention), conformément à l'Art. 34(1)(d) du CMP\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f Membre observateur (sans droit de vote) : Représentant de l'Organe de Contrôle des Marchés\n Publics (DGCMP), conformément à l'Art. 34(1)(d) du CMP — distinct de l'Audit Interne de l'INSAPT,\n qui n'intervient qu'en contrôle a posteriori (Chapitre 17)\n  Observateur extérieur : Représentant du PTF concerné (le cas échéant, selon accord de\n financement)\n\n4.3.2 Fonctionnement\n  Le quorum est atteint avec la présence du Président, d'au moins deux (2) membres et du Secrétaire\n (Art. 40 CMP)\n  Les décisions sont prises à la majorité des membres présents\n  Un procès-verbal signé est établi à l'issue de chaque séance et conservé au dossier de marché\n  Tout membre ayant un intérêt dans un marché est tenu de se récuser (Déclaration Annexe 1.F)\n  La CPM n'intervient pas pour les commandes CPA, qui relèvent des procédures propres à la Centrale\n4.4 Matrice RACI de la Passation des Marchés\n ACTIVITÉ DG SPM Finance Tech. CPM Audit CPA\nExpression des besoins I C C R — — —\nCommande via CPA (produits A R I C — — I(reçoit)\n santé)\nCertification budgétaire A I R I — — —\nPréparation du dossier d'AO A R C C — — —\n (marchés hors-CPA)\nÉvaluation des offres (hors- I C C C R — —\n CPA)\nAttribution et signature du R C C — C I —\n marché\nRéception des produits (CPA A C — R — — —\n ou hors-CPA)\nPaiement fournisseur / CPA A C R R — — —\nArchivage & reporting (incl. I R C — — A —\n rapport CPA)\nR = Responsable | A = Approbateur | C = Consulté | I = Informé | CPA = Centrale Pharmaceutique d'Achat\n4.5 Politique de Conflits d'Intérêts\nTout agent de l'INSAPT impliqué dans un processus d'acquisition — y compris dans la formulation de\nspécifications transmises à la CPA — est tenu de déclarer tout intérêt personnel, familial ou professionnel\nsusceptible d'influencer son jugement. La Déclaration de Conflit d'Intérêts (Annexe 1.F) est obligatoire avant\ntoute participation à une CPM. Tout manquement constitue une faute disciplinaire grave.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 5, "title": "IDENTIFICATION DES BESOINS &", "content": "CHAPITRE 5 — IDENTIFICATION DES BESOINS &\n PLANIFICATION\n 5.1 Plan de Passation des Marchés (PPM)\nL'INSAPT élabore chaque année un Plan de Passation des Marchés (PPM) pour l'ensemble de ses unités\norganisationnelles. Le PPM comprend deux volets distincts : (1) les acquisitions directes de l'INSAPT (hors\nproduits de santé CPA) ; (2) les prévisions de commandes à la CPA pour les réactifs, médicaments et\nproduits de santé, exprimées en besoins consolidés transmis annuellement à la CPA.\n\n5.1.1 Contenu minimum du PPM\n  Nature et description de chaque acquisition prévue (avec distinction acquisitions directes /\n commandes CPA)\n  Estimation budgétaire et source de financement\n  Méthode de passation envisagée ou canal CPA applicable\n  Calendrier prévisionnel (lancement, évaluation/commande, signature/réception, livraison)\n  Responsable technique désigné\n\n5.1.2 Processus d'élaboration\n  Chaque direction technique soumet ses besoins au SPM avant le 30 novembre de l'année N-1, en\n distinguant les produits CPA des acquisitions directes\n  Le LNSP soumet séparément et simultanément ses besoins en réactifs à la CPA selon les\n procédures et formulaires de la CPA\n  Le SPM consolide, vérifie la cohérence et prépare le projet de PPM\n  L'Agence Comptable certifie la disponibilité des crédits\n  Le PPM est approuvé par la Direction Générale avant le 15 janvier de l'année N\n  Le PPM est transmis à l'Autorité de Régulation des Marchés Publics (ARMP) conformément à l'Article\n 9 du Décret N°002130/PR/2020\n  Le PPM est mis à jour trimestriellement\n5.2 Identification et Justification des Besoins\nToute acquisition débute par une expression formelle du besoin via le Formulaire de Demande d'Acquisition\n(FDA — Annexe 1.B). Pour les produits de santé relevant de la CPA, une version adaptée du FDA est\ntransmise directement à la CPA selon ses propres formulaires (voir Annexe N).\n5.3 Étude de Marché et Estimation des Coûts\nPour les acquisitions directes (hors CPA), le SPM réalise une étude de marché fondée sur au moins trois (3)\nsources de prix indépendantes. Pour les produits de santé relevant de la CPA, le prix de référence est celui\ndu catalogue CPA ou de ses appels d'offres en cours ; aucune étude de marché indépendante n'est requise\npour ces produits.\n5.4 Regroupement et Allotissement\nL'INSAPT peut regrouper des acquisitions similaires pour bénéficier d'économies d'échelle ou les allotir pour\npermettre la participation de PME locales, conformément à l'Article 72 du Décret N°002130/PR/2020. Pour les\nproduits CPA, le regroupement des commandes est encouragé pour améliorer les délais et conditions de\nlivraison.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 6, "title": "PROSPECTION DU MARCHÉ & SOURCING", "content": "CHAPITRE 6 — PROSPECTION DU MARCHÉ & SOURCING\n CPA — CENTRALE PHARMACEUTIQUE D'ACHAT : Pour les réactifs, médicaments et produits de santé\n relevant du mandat CPA, les sections 4.1 à 4.3 du présent chapitre s'appliquent uniquement aux acquisitions\n directes hors-CPA dûment autorisées. La prospection et la pré-qualification des fournisseurs de produits de\n santé sont de la responsabilité exclusive de la CPA.\n6.1 Prospection du Marché (acquisitions directes hors-CPA)\nLa prospection du marché est une étape préalable pour toutes les acquisitions directes de l'INSAPT. Elle vise\nà identifier les fournisseurs potentiels, recueillir des informations sur les prix et évaluer la disponibilité des\nbiens ou services requis. Les résultats sont consignés dans un Rapport de Prospection (Annexe 2.E).\n6.2 Pré-qualification des Fournisseurs\nL'INSAPT maintient un Répertoire de Fournisseurs Qualifiés (RFQ) pour les catégories d'achats récurrents\nrelevant de sa propre compétence d'acquisition.\n\n6.2.1 Critères de qualification générale\n  Existence légale et enregistrement au RCCM du Tchad\n  Situation fiscale et sociale régulière (quitus fiscal)\n  Capacité financière démontrée\n  Références techniques pertinentes (au moins 3 sur les 5 dernières années)\n  Absence de condamnation pour fraude ou corruption\n\n6.2.2 Fournisseurs de Produits de Santé — Articulation avec la CPA\nCPA — CENTRALE PHARMACEUTIQUE D'ACHAT : La pré-qualification des fournisseurs de médicaments,\n réactifs et produits de santé est effectuée exclusivement par la CPA. L'INSAPT ne constitue pas de répertoire\n propre de fournisseurs qualifiés pour ces catégories. En cas de dérogation CPA autorisée, l'INSAPT vérifie\n que le fournisseur est inscrit au répertoire CPA ou, à défaut, applique les critères de qualification CPA comme\n minimum.\n6.3 Règle des Trois Devis\n FONDEMENT LÉGAL : Conformément aux Articles 9 et 12 du Décret N°002130/PR/2020, pour les marchés relevant\n de la procédure simplifiée (de 10 000 000 FCFA jusqu'au seuil d'appel d'offres applicable par type de marché),\n l'INSAPT sollicite au minimum trois (3) devis comparatifs de fournisseurs distincts. Ces devis sont consignés dans un\n Journal de Sourcing (Annexe 2.F).\n6.4 Préférence Nationale\nConformément au Titre III, Section 3 du Décret N°002130/PR/2020, les entreprises tchadiennes bénéficient\nd'une préférence nationale lors de l'évaluation des offres dans les appels d'offres nationaux.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 7, "title": "PROCESSUS D'APPEL D'OFFRES ET RFQ", "content": "CHAPITRE 7 — PROCESSUS D'APPEL D'OFFRES ET RFQ\n CPA — CENTRALE PHARMACEUTIQUE D'ACHAT : Les seuils et méthodes du présent chapitre s'appliquent\n exclusivement aux acquisitions directes de l'INSAPT (biens, services, travaux non relevant de la CPA). Les\n commandes à la CPA suivent les procédures internes de la CPA, sans appel d'offres INSAPT.\n7.1 Seuils de Passation des Marchés et Méthodes\n FONDEMENT LÉGAL : Les seuils ci-dessous sont établis conformément aux Articles 9 à 13 du Décret\n N°002130/PR/2020 Portant Code des Marchés Publics (seuils d'appel d'offres, de procédure simplifiée et de\n consultation directe), précisés par le Décret N°2499/PR/2020 fixant les seuils de passation, de contrôle et\n d'approbation des marchés publics. En tant qu'EPST, l'INSAPT applique les seuils applicables aux Établissements\n Publics assujettis au Code.\nTRANCHE MONTANT (FCFA TTC) MÉTHODE APPROBATEUR(S) DÉLAI INDICATIF\nConsultation < 10 000 000 FCFA (tous Consultation directe DG + Chef de service 3–7 jours\n directe types : travaux, fournitures, sur bon de + Comptable\n services, prestations commande (sans\n intellectuelles) [Art. 13 mise en\n CMP] concurrence\n formelle)\nProcédure ≥ 10 M et < 30 M FCFA Consultation DG + SPM + 15–21 jours\n simplifiée (fournitures/services) ≥ 10 restreinte (≥ 3 Comptable\n M et < 50 M FCFA devis)\n (travaux) ≥ 10 M et < 20 M\n FCFA (prestations\n intellectuelles) [Art. 9 et 12\n CMP]\nAppel d'offres ≥ 50 M et ≤ 2 milliards Appel d'offres CPM + DG + 45–60 jours\n national FCFA (travaux) ≥ 30 M et ≤ ouvert national notification ARMP\n 1 milliard FCFA\n (fournitures) ≥ 20 M et ≤\n 400 M FCFA (services) ≥\n 20 M et ≤ 500 M FCFA\n (prestations intellectuelles)\n [Art. 9 et 10 CMP]\nAppel d'offres > 2 milliards FCFA Appel d'offres CPM + DG + CA + 60–90 jours\n international (travaux) > 1 milliard FCFA ouvert international ARMP\n (fournitures) > 400 M FCFA\n (services) > 500 M FCFA\n (prestations intellectuelles)\n [Art. 11 CMP]\nGré à gré Tout montant — conditions Marché de gré à DG + autorisation Variable\n restrictives, autorisation gré avec préalable ARMP\n préalable du Ministre en justification\n charge des marchés obligatoire et\n publics requise [Art. 45-46 autorisation ARMP\n CMP]\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f\nNote : Le recours au gré à gré (Articles 45 et 46 du Code des Marchés Publics) est strictement limité aux cas prévus par les textes en\nvigueur et requiert l'autorisation préalable du Ministre en charge des Marchés Publics ; le dossier de consultation et l'offre du\nsoumissionnaire sont ensuite soumis à la Commission de Passation des Marchés et à la DGCMP pour avis. L'interdiction de\nfractionnement des marchés pour échapper aux seuils applicables est par ailleurs strictement posée par l'Article 14 du Code.\n7.2 Dossier d'Appel d'Offres (DAO)\n  Avis d'appel d'offres (AAO) avec délai de remise des offres\n  Instructions aux soumissionnaires (IS)\n  Cahier des clauses administratives générales (CCAG)\n  Cahier des clauses techniques particulières (CCTP) avec spécifications détaillées\n  Formulaires d'offre et de soumission\n  Critères d'évaluation et de qualification pondérés\n  Formulaire de marché (projet de contrat) incluant la clause anti-corruption obligatoire\n7.3 Publication et Délais\n  Les avis d'AO nationaux sont publiés dans au moins un journal de grande diffusion au Tchad et sur le\n portail de l'ARMP (obligation légale — Article 10 du Décret N°002130/PR/2020)\n  Les avis internationaux sont publiés dans des médias internationaux reconnus selon les exigences du\n PTF\n  Le délai minimum de remise des offres est de quarante-cinq (45) jours calendaires pour un AO\n national et de soixante (60) jours pour un AO international\n  Tout raccourcissement de délai doit être justifié par l'urgence et approuvé par l'ARMP\n7.4 Ouverture et Évaluation des Offres\n  L'ouverture des plis est effectuée en séance publique par la CPM\n  Un procès-verbal d'ouverture des plis est signé par tous les membres présents\n  L'évaluation technique est effectuée avant l'évaluation financière\n  Seules les offres techniquement conformes sont évaluées financièrement\n  Le rapport d'évaluation est signé par tous les membres de la CPM et soumis au DG\n  L'INSAPT informe les soumissionnaires non retenus par écrit avec motivation\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 8, "title": "ATTRIBUTION & SIGNATURE DU CONTRAT", "content": "CHAPITRE 8 — ATTRIBUTION & SIGNATURE DU CONTRAT\n 8.1 Décision d'Attribution\nSur recommandation de la CPM, la Direction Générale arrête la décision d'attribution, formalisée par un\nMémo d'Attribution (Annexe 3.H).\n8.2 Publication des Résultats\n FONDEMENT LÉGAL : Obligation légale de publicité et de transparence des résultats d'attribution, conformément aux\n principes posés à l'Article 3(2) du Décret N°002130/PR/2020. Les résultats d'attribution sont publiés dans les supports\n de l'avis d'AO et sur le portail de l'ARMP. Le délai précis de publication sera confirmé auprès de l'ARMP et de la\n DGCMP lors de la mise en œuvre opérationnelle de la présente disposition.\n8.3 Délai de Recours et Non-Objection\nUn délai de recours est accordé aux soumissionnaires non retenus à compter de la publication des résultats,\ndans les conditions et délais fixés au Titre VI, Chapitre 1 du Décret N°002130/PR/2020 (recours hiérarchique\nauprès du Maître d'Ouvrage, puis recours devant le Comité de Règlement des Différends de l'ARMP en cas\nde désaccord persistant — voir Chapitre 16.4 du présent Manuel). Pour les marchés financés par un PTF, la\nnon-objection formelle est requise avant la signature.\n8.4 Signature du Contrat\n FONDEMENT LÉGAL : En vertu du Décret N°2624/PR/PM/MSPP/2023, le Directeur Général de l'INSAPT est\n l'Autorité Contractante habilitée à signer tous les marchés. Pour les marchés d'un montant supérieur à 30 000 000\n FCFA, le visa préalable du Contrôle Financier de l'État est requis conformément à la réglementation financière\n publique tchadienne.\n L'Agence Comptable confirme la disponibilité définitive des crédits (engagement budgétaire)\n  Le SPM vérifie la complétude du dossier administratif du titulaire\n  Pour les marchés > 30 000 000 FCFA, le visa du Contrôle Financier est requis\n  La clause anti-corruption est intégrée à tout contrat (voir ci-dessous)\nCLAUSE ANTI-CORRUPTION OBLIGATOIRE : Tout contrat signé par l'INSAPT doit comporter une clause anti-\n corruption. La violation de cette clause entraîne la résiliation immédiate et le signalement aux autorités judiciaires\n compétentes.\n8.5 Garanties Contractuelles\n TYPE DE GARANTIE MONTANT CONDITIONS\nCaution de soumission 1–2 % du montant de l'offre Requise pour tout AO national ou international\nGarantie de bonne exécution 5–10 % du montant du Requise avant signature, valable jusqu'à réception\n marché provisoire\nCaution de restitution d'avance 100 % du montant de Si avance accordée (max 20 % du montant)\n l'avance\nRetenue de garantie 5–10 % du montant des Libérée à la réception définitive\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fTYPE DE GARANTIE MONTANT CONDITIONS\npaiements\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 9, "title": "GESTION DES CONTRATS", "content": "CHAPITRE 9 — GESTION DES CONTRATS\n 9.1 Mise en Œuvre et Suivi\nLa gestion des contrats est une responsabilité partagée entre le SPM, la direction technique et l'Agence\nComptable. Chaque contrat est suivi via une Fiche de Suivi de Contrat (FSC — Annexe 4.B). Pour les\ncommandes CPA, la Fiche de Suivi CPA (Annexe N, Section 3) remplace la FSC.\n9.2 Inspection, Réception et Acceptation\n  À la livraison, le responsable technique procède à l'inspection et établit un PVIR (Annexe 5.B)\n  Pour les produits reçus via la CPA, l'inspection incluant la vérification de la chaîne du froid (Annexe\n 5.E) et des dates de péremption est obligatoire\n  Tout incident de qualité sur un produit CPA est notifié formellement à la CPA dans les 48 heures\n  En cas de non-conformité, un Rapport de Non-Conformité est émis au fournisseur (ou à la CPA)\n9.3 Avenant et Modification de Contrat\nTout avenant modifiant le scope, le montant ou le délai d'un contrat suit le même circuit d'approbation que le\ncontrat initial, conformément aux dispositions du Titre IV, Chapitre 4, Section 2 du Décret N°002130/PR/2020\n(« Des avenants »). Un avenant cumulé dépassant 30 % du montant initial est traité comme un nouveau\nmarché.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 10, "title": "PERFORMANCE DES FOURNISSEURS", "content": "CHAPITRE 10 — PERFORMANCE DES FOURNISSEURS\n 10.1 Évaluation Continue\nL'INSAPT évalue systématiquement la performance de ses fournisseurs directs (hors-CPA). Pour les\nfournisseurs de produits de santé opérant via la CPA, l'évaluation de performance est conduite par la CPA\nselon ses propres procédures. L'INSAPT alimente la CPA en retours d'expérience via les notifications\nd'incidents qualité.\n10.2 Critères d'Évaluation\n CRITÈRE PONDÉRATION INDICATEURS\nQualité des biens/services livrés 30 % Conformité aux spécifications, taux de défaut\nRespect des délais de livraison 25 % Livraisons à temps / total des livraisons\nQualité de la documentation fournie 15 % Complétude des documents, factures conformes\nRéactivité et service après-vente 15 % Délai de réponse aux non-conformités\nRespect des obligations 15 % Garanties, rapports, assurances à jour\n contractuelles\n10.3 Système de Classification\n  Score ≥ 80 % : Fournisseur qualifié — maintenu au Répertoire\n  Score 60–79 % : Fournisseur sous surveillance — plan d'amélioration dans les 30 jours\n  Score < 60 % ou deux évaluations insuffisantes consécutives : Suspension du Répertoire pour 12\n mois minimum\n  Fraude, faux documents ou corruption avérée : Exclusion définitive et signalement à l'ARMP et aux\n autorités judiciaires\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 11, "title": "INTÉGRATION FINANCIÈRE", "content": "CHAPITRE 11 — INTÉGRATION FINANCIÈRE\n 11.1 Vérification Budgétaire Préalable\nAucune procédure d'acquisition — directe ou via la CPA — ne peut être engagée sans certification préalable\nde disponibilité budgétaire par l'Agence Comptable de l'INSAPT, via le Bon de Réservation de Crédits (BRC).\n11.2 Processus de Facturation et de Paiement\n  Le fournisseur (ou la CPA pour les produits de santé) soumet une facture conforme accompagnée du\n bon de livraison et du PVIR signé\n  Le responsable technique valide la conformité de la livraison\n  Le SPM vérifie la cohérence entre la facture, le bon de commande/commande CPA et le bon de\n réception\n  La facture est transmise à l'Agence Comptable pour liquidation et ordonnancement\n  Tout retard de paiement génère des intérêts moratoires conformément aux dispositions du Titre IV,\n Chapitre 3, Section 5 du Décret N°002130/PR/2020 (« Des intérêts moratoires et des pénalités ») ; le\n taux et les modalités de calcul applicables seront confirmés par référence à l'article exact lors de la\n prochaine revue du Manuel (Mois 6)\n11.3 Avances sur Marchés\nUne avance sur marché peut être accordée dans la limite de vingt pour cent (20 %) du montant du marché,\ncontre remise d'une caution bancaire de restitution d'avance. Les commandes à la CPA peuvent faire l'objet\nd'un acompte selon les conditions de la CPA.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 12, "title": "PROCÉDURES OPÉRATIONNELLES", "content": "CHAPITRE 12 — PROCÉDURES OPÉRATIONNELLES\n STANDARDISÉES : PASSATION GÉNÉRALE (SOP 1 À 6)\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fSOP 01 — RÉQUISITION & PLANIFICATION DES MARCHÉS\n\n1. Objet\nLa présente Procédure Opérationnelle Normalisée (PON) décrit le processus standardisé d'expression des\nbesoins, de planification des acquisitions et d'établissement des bons de commande au sein de l'Institut\nNational de Santé Publique du Tchad (INSAPT). Elle vise à garantir que toute acquisition est justifiée, planifiée,\nbudgétée et autorisée avant son lancement, conformément au Décret N°002130/PR/2020 Portant Code des\nMarchés Publics du Tchad (CMP).\n\n2. Champ d'Application\nCette procédure s'applique à :\n  Toutes les unités organisationnelles de l'INSAPT : Direction Générale, Secrétariat Général, Centre de\n Veille Sanitaire (CVS), Laboratoire National de Santé Publique (LNSP), Centre de Formation et\n Recherche en Santé Publique (CFRSP)\n  Toutes les acquisitions de biens, services, travaux et prestations intellectuelles, quel que soit le\n montant\n  Toutes les sources de financement : budget de l'État, ressources propres, financements de\n partenaires techniques et financiers (PTF)\n Référence légale : Articles 1 à 12 du Décret N°002130/PR/2020 (CMP) — définitions, champ d'application et\n seuils de la commande publique. Loi N°011/PR/2020 portant création de l'INSAPT, Article 4 (ressources de\n l'Institut).\n\n3. Rôles & Responsabilités\n RÔLE RESPONSABILITÉ DANS CETTE PROCÉDURE\nChef de Service / Identifie le besoin, rédige les spécifications techniques, remplit le Formulaire de\n Responsable Technique Demande d'Acquisition (FDA), soumet pour validation\n (CVS, LNSP, CFRSP)\nService Passation des Vérifie la cohérence de la demande avec le Plan de Passation des Marchés\n Marchés (SPM) (PPM), consolide les demandes, conseille sur la méthode appropriée\nAgence Comptable / Vérifie et certifie la disponibilité budgétaire (Bon de Réservation de Crédits —\n Responsable Financier BRC)\nDirecteur Général (DG) Approuve les demandes dépassant le seuil délégué et valide le PPM annuel\nSecrétariat Général Enregistre et numérote les FDA, assure le suivi administratif\n\n4. Procédure\n4.1 Planification Annuelle (Plan de Passation des Marchés)\n • Chaque Chef de Service soumet ses besoins prévisionnels pour l'année N au Service Passation des\n Marchés (SPM) avant le 30 novembre de l'année N-1, en utilisant le Formulaire de Planification\n Annuelle (Annexe 1.A)\n • Le SPM consolide l'ensemble des besoins par direction, vérifie la cohérence technique et budgétaire,\n et établit le projet de Plan de Passation des Marchés (PPM)\n • L'Agence Comptable certifie la disponibilité prévisionnelle des crédits pour chaque ligne du PPM\n • La Direction Générale approuve le PPM avant le 15 janvier de l'année N\n • Le PPM approuvé est transmis à l'Autorité de Régulation des Marchés Publics (ARMP) conformément\n au CMP et publié en interne\n • Le PPM est révisé trimestriellement pour intégrer les ajustements de besoins\n\n4.2 Expression du Besoin (Réquisition)\n • Le besoin est identifié par le Chef de Service ou le responsable technique concerné\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f• Le demandeur remplit le Formulaire de Demande d'Acquisition (FDA — Annexe 1.B), précisant :\n description du bien/service, quantité, spécifications techniques, justification, ligne budgétaire, urgence\n éventuelle\n • Le FDA est signé par le Chef de Service et transmis au SPM\n • Le SPM vérifie la conformité du FDA avec le PPM approuvé : (a) si le besoin figure au PPM →\n poursuite normale ; (b) si le besoin n'est pas planifié → justification complémentaire requise et mise à\n jour du PPM\n • Le SPM transmet le FDA à l'Agence Comptable pour vérification et certification de la disponibilité\n budgétaire (émission du Bon de Réservation de Crédits — BRC)\n\n4.3 Détermination de la Méthode d'Acquisition\nSur la base du montant estimé et de la nature de l'acquisition, le SPM détermine la méthode de passation\napplicable, conformément aux seuils définis au Chapitre 3 du Manuel de Politiques et Procédures de Passation\ndes Marchés de l'INSAPT et aux Articles 9-12 du CMP :\nMONTANT (FCFA TTC) MÉTHODE PROCÉDURE APPLICABLE\n< 10 000 000 Achat direct Présente PON 01 uniquement\n10 000 000 – seuils CMP Art.9 Procédure simplifiée (≥ 3 devis) PON 01 puis transition vers PON\n 03 (consultation restreinte)\n> seuils CMP Art.9 Appel d'offres national / PON 01 puis transition vers PON\n international 03 (appel d'offres ouvert)\n\n4.4 Établissement du Bon de Commande (Achat Direct)\nPour les acquisitions inférieures à 10 000 000 FCFA relevant de l'achat direct, la procédure se poursuit comme\nsuit :\n • Le SPM sollicite au minimum un (1) devis (recommandé : deux devis pour les montants supérieurs à\n 5 000 000 FCFA) auprès d'un fournisseur figurant au Répertoire de Fournisseurs Qualifiés (voir PON\n 02)\n • Le SPM établit le Bon de Commande (BC — Annexe 1.C) reprenant les conditions convenues\n (désignation, quantité, prix, délai de livraison, lieu de livraison)\n • Le BC est signé par le Chef du SPM et visé par l'Agence Comptable (engagement budgétaire)\n • Le BC est signé par le Directeur Général pour les montants supérieurs à 2 000 000 FCFA, ou par\n délégation pour les montants"}, {"num": 13, "title": "ACHATS D'URGENCE", "content": "CHAPITRE 13 — ACHATS D'URGENCE\n ⚠ PROCÉDURES D'URGENCE — Ce chapitre définit des dérogations exceptionnelles aux procédures normales, y\n compris au canal CPA pour les produits de santé. Ces dérogations sont soumises à une documentation renforcée et à\n un contrôle a posteriori obligatoire.\n13.1 Définition des Situations d'Urgence\n  Épidémies ou menaces sanitaires déclarées nécessitant une riposte immédiate\n  Rupture critique de stock de réactifs ou consommables essentiels menaçant l'arrêt des analyses\n nationales de référence\n  Indisponibilité prouvée du produit au catalogue CPA avec impact opérationnel immédiat\n  Panne ou défaillance majeure d'équipements de laboratoire ou de chaîne du froid\n  Catastrophe naturelle ou force majeure affectant les opérations de l'INSAPT\n  Activation du COUSP nécessitant des acquisitions immédiates pour la riposte\n13.2 Seuils d'Autorisation en Urgence\n MONTANT AUTORITÉ HABILITÉE DOCUMENTATION REQUISE\n< 5 000 000 FCFA Directeur Général (ou SG par Mémo d'urgence + bon de commande + au moins 1\n délégation écrite) devis + notification CPA si produit santé\n5 000 000 à 30 000 000 Directeur Général + Agence Déclaration d'urgence + 2 devis si délai le permet +\n FCFA Comptable BRC + notification CPA si applicable\n> 30 000 000 FCFA Directeur Général + notification Dossier complet + rapport d'urgence + validation\n immédiate au Président du CA CA a posteriori + notification CPA/ARMP\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 14, "title": "RÉACTIFS DE LABORATOIRE & GESTION", "content": "CHAPITRE 14 — RÉACTIFS DE LABORATOIRE & GESTION\n DES STOCKS\n CPA — CENTRALE PHARMACEUTIQUE D'ACHAT : Ce chapitre s'applique spécifiquement au LNSP de\n l'INSAPT. La grande majorité des réactifs, kits de diagnostic et consommables biologiques relèvent du mandat\n exclusif de la CPA. Le LNSP doit canaliser ses besoins via la CPA, sauf dérogation autorisée (Ch. 1B.5).\n14.1 Articulation LNSP – CPA pour les Réactifs\nLe LNSP de l'INSAPT est le principal consommateur de réactifs de l'Institut. Son approvisionnement\ns'effectue prioritairement via la CPA, conformément aux dispositions du Chapitre 3. Les procédures du\nprésent chapitre encadrent la gestion interne des stocks, la planification des besoins à soumettre à la CPA, et\nles procédures de réception et de contrôle qualité à l'arrivée des livraisons CPA.\n14.2 Planification Annuelle des Besoins en Réactifs (à soumettre à la CPA)\nLe Directeur du LNSP prépare, avant le 30 octobre de chaque année, une prévision consolidée des besoins\nannuels en réactifs, fondée sur la méthodologie de prévision basée sur la consommation (Cadre Annuel de\nPlanification des Marchés, Livrable 3). Cette prévision est transmise simultanément :\n  À la CPA, via le formulaire de planification annuelle de la CPA, pour inscription dans son plan\n d'approvisionnement\n  Au SPM de l'INSAPT, pour intégration dans le PPM institutionnel (volet CPA)\n  À l'Agence Comptable, pour certification de la disponibilité budgétaire prévisionnelle\n14.3 Niveaux de Stock et Points de Commande\n STOCK STOCK POINT DE DÉLAI DE LIVRAISON CPA\n CATÉGORIE DE RÉACTIF\n MIN. MAX. RÉORDER ESTIMÉ\nRéactifs diagnostic épidémique 3 mois 12 mois 4 mois À établir avec la CPA (cible ≤ 4\n (VHF, choléra, méningite) sem.)\nMilieux de culture microbiologie 2 mois 6 mois 3 mois À établir avec la CPA (cible ≤ 3\n sem.)\nRéactifs de biologie moléculaire 2 mois 6 mois 3 mois À établir avec la CPA (cible ≤ 4\n (PCR) sem.)\nConsommables courants 1 mois 4 mois 6 semaines À établir avec la CPA (cible ≤ 2\n biologiques sem.)\nRéactifs chimiques / toxicologie 2 mois 6 mois 3 mois À établir avec la CPA (cible ≤ 3\n sem.)\n14.4 Réception des Produits CPA au LNSP\n  À chaque livraison CPA, le Gestionnaire de Stock LNSP et le Responsable Qualité LNSP procèdent à\n une inspection complète selon la Fiche de Contrôle de la Chaîne du Froid (Annexe 5.E)\n  Tout écart (quantité, qualité, chaîne du froid, date de péremption) est documenté dans le PVIR\n (Annexe 5.B) et notifié formellement à la CPA dans les 48 heures\n  En cas de produit non-conforme, l'INSAPT met le lot en quarantaine et attend la décision conjointe\n INSAPT-CPA avant toute utilisation ou destruction\n  La CPA est informée de tout incident de chaîne du froid détecté à la réception\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f14.5 Principe PPSO / FEFO\nL'INSAPT applique le principe PPSO (Premier Périmé, Sorti en Premier — FEFO) pour tous les réactifs et\nconsommables, qu'ils proviennent de la CPA ou d'une source directe autorisée. Ce principe est suivi via la\nFiche d'Inventaire FEFO/PPSO (Annexe 5.D).\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 15, "title": "PROCÉDURES OPÉRATIONNELLES", "content": "CHAPITRE 15 — PROCÉDURES OPÉRATIONNELLES\n STANDARDISÉES : RÉACTIFS DE LABORATOIRE (SOP R-1 À\n R-4)\n NOTE PRÉLIMINAIRE — CENTRALE PHARMACEUTIQUE D'ACHAT (CPA) :\n CANAL EXCLUSIF\n DISPOSITION OBLIGATOIRE — Conformément aux textes réglementaires en vigueur au Tchad, la\n Centrale Pharmaceutique d'Achat (CPA) est l'unique structure nationale chargée de l'approvisionnement\n du secteur public en médicaments, réactifs et autres produits de santé. L'INSAPT et son Laboratoire\n National de Santé Publique (LNSP) doivent, pour tout achat de réactifs, kits de diagnostic, milieux de\n culture, contrôles, calibrateurs et consommables biologiques, passer obligatoirement par la CPA, qui\n dispose de ses propres textes réglementaires, procédures de préqualification des fournisseurs et\n mécanismes de passation des marchés.\n\n1. Implications sur les présentes SOP\nLes présentes Procédures Opérationnelles Normalisées (SOP R-1 à R-4) régissent les processus internes à\nl'INSAPT/LNSP relatifs à : la définition des besoins et des spécifications techniques, la planification des\napprovisionnements, la gestion de la réception (contrôle qualité, chaîne du froid), la gestion des stocks\n(PPSO/FEFO), et la distribution aux sites partenaires. Elles ne substituent pas les procédures de la CPA, mais\ns'y articulent et s'y conforment.\n\n2. Architecture d'Approvisionnement à Deux Niveaux\n NIVEAU ACTEUR RESPONSABILITÉ\n1 — Passation des Centrale Pharmaceutique d'Achat Préqualification fournisseurs, appel\n marchés (CPA) d'offres, attribution, contractualisation,\n acheminement vers l'INSAPT/LNSP\n conformément à ses propres procédures\n et au CMP\n2 — Gestion interne INSAPT / LNSP (+ Service Passation Définition des besoins, spécifications\n des Marchés) techniques, planification PPM, réception,\n chaîne du froid, stocks (PPSO/FEFO),\n distribution aux sites partenaires — régi\n par les présentes SOP\nRéférence légale principale : CMP Décret N°002130/PR/2020, Article 8 (al. 2) — En cas de conflit entre le\n présent Code et les obligations souscrites par l'État Tchadien dans le cadre d'un accord, traité ou convention\n avec une institution internationale ou intergouvernementale de financement, les dispositions du traité ou de\n l'accord prévalent sur les dispositions contraires du Code (clause PTF). Les dispositions non contraires\n demeurent applicables.\n Référence : Article 4 du CMP — Le présent Code s'applique notamment aux établissements publics de l'État\n (INSAPT en tant qu'établissement public). Le Directeur Général est l'organe administratif compétent pour la\n passation des marchés (Art. 28).\n\n3. Interface LNSP ↔ CPA : Processus de Demande\n 1. Le LNSP, via son Gestionnaire de Stock et le Directeur du LNSP, établit une Expression de Besoins\n annuelle consolidée (intégrée au Plan de Passation des Marchés — PPM — conformément à l'Art. 71\n du CMP) et la soumet à la CPA dans les délais définis par la CPA pour l'exercice budgétaire\n concerné\n 2. Pour les besoins non planifiés ou urgents survenant en cours d'exercice, le LNSP soumet une\n demande d'approvisionnement urgente à la CPA en précisant la criticité, le volume et les\n spécifications techniques (voir SOP R-1, Section 4.3)\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f3. La CPA confirme la disponibilité en stock ou engage la procédure d'acquisition selon ses propres\n règles de passation, en respectant les seuils du CMP (Art. 9 à 12) et ses procédures de\n préqualification\n 4. À la livraison, l'INSAPT/LNSP applique les procédures de réception décrites dans les SOP R-2\n (chaîne du froid) et les formulaires R-2.A, R-2.B, R-4.B et R-4.C, indépendamment de la procédure\n d'acquisition menée par la CPA\nLes SOP R-1 à R-4 s'appliquent à la gestion interne des réactifs par l'INSAPT/LNSP. Toute procédure de\n commande, de contractualisation ou de sélection de fournisseur relève exclusivement de la CPA. En cas de\n divergence entre une disposition des présentes SOP et les procédures en vigueur à la CPA, les procédures de la\n CPA prévalent. Un addendum de coordination CPA-INSAPT doit être formalisé lors de la validation du présent\n document.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fSOP R-1 — EXPRESSION DES BESOINS & COORDINATION AVEC LA CPA\n\n1. Objet\nLa présente Procédure Opérationnelle Normalisée décrit le processus interne à l'INSAPT/LNSP relatif à : (a)\nl'identification et la planification des besoins en réactifs, milieux de culture, kits de diagnostic, contrôles et\ncalibrateurs ; (b) l'élaboration des spécifications techniques ; (c) la coordination avec la Centrale\nPharmaceutique d'Achat (CPA) pour les demandes d'approvisionnement ordinaires et d'urgence. Elle précise\nles responsabilités et documents requis à chaque étape, dans le respect du mandat exclusif de la CPA pour la\npassation des marchés de produits de santé dans le secteur public tchadien.\n\n2. Champ d'Application\nCette procédure s'applique à tous les réactifs, milieux de culture, kits de diagnostic, contrôles, calibrateurs et\nconsommables biologiques du LNSP, couvrant les unités : Entomologie/Parasitologie, Bactériologie/Virologie,\nBiologie moléculaire et génomique, Environnement/Toxicologie.\n Références légales : Loi N°011/PR/2020, Art. 3 (mission INSAPT) ; CMP Décret N°002130/PR/2020, Art. 4\n (champ d'applicatio"}, {"num": 16, "title": "ÉTHIQUE & ANTI-CORRUPTION", "content": "CHAPITRE 16 — ÉTHIQUE & ANTI-CORRUPTION\n 16.1 Principes Fondamentaux\nL'INSAPT adhère à une politique de tolérance zéro envers toute forme de corruption, de fraude, de collusion\nou de pratique anticoncurrentielle dans ses processus d'acquisition — qu'il s'agisse de marchés directs ou de\ncommandes transmises à la CPA.\n16.2 Comportements Interdits\n  Sollicitation ou acceptation d'avantages, cadeaux ou commissions liés à un marché ou à une\n commande CPA\n  Divulgation d'informations confidentielles à des soumissionnaires potentiels\n  Fractionnement artificiel de marchés pour contourner les seuils de l'AO ou le canal CPA\n  Participation à l'évaluation d'un marché dans lequel on a un intérêt déclaré ou non déclaré\n  Pression sur les membres de la CPM\n  Falsification de documents, de devis, de procès-verbaux ou de fiches de contrôle qualité\n  Contournement délibéré du canal CPA sans dérogation formelle approuvée\n16.3 Mécanisme de Signalement\n FONDEMENT LÉGAL : Conformément à l'Article 60(k) du Décret N°002130/PR/2020, l'ARMP peut recevoir les\n recours des candidats et soumissionnaires ou s'autosaisir des violations de la réglementation des marchés publics.\n Conformément à l'Article 69(2), tout membre d'une Commission de Passation des Marchés en situation de conflit\n d'intérêt doit le signaler par écrit à l'ARMP, sous peine des sanctions prévues par la réglementation en vigueur. Les\n signalements peuvent également être adressés à l'Auditeur Interne de l'INSAPT, au Directeur Général, ou aux PTF\n concernés. Tout signalement de bonne foi est protégé.\n16.4 Mécanisme de Recours et Règlement des Différends\nConformément au Titre VI, Chapitre 1 du Décret N°002130/PR/2020, tout candidat ou\nsoumissionnaire qui s'estime lésé par une décision ou un manquement de l'INSAPT au cours d'une\nprocédure de passation des marchés dispose d'un droit de recours, exercé selon un mécanisme à\ndeux niveaux. La présente section décrit ce mécanisme afin de garantir sa pleine application au sein\nde l'INSAPT, conformément à la mission de régulation des différends confiée à l'ARMP (armp-\ntchad.com/missions).\n\n16.4.1 Premier Niveau — Recours Hiérarchique auprès du Maître d'Ouvrage\nLe Code distingue quatre fenêtres de recours successives, chacune ouverte à un stade précis de la\nprocédure :\n  Entre la publication de l'avis d'appel d'offres et l'ouverture des plis — recours sur le contenu du\n Dossier d'Appel d'Offres (DAO) ou les conditions de participation\n  À l'ouverture des plis — recours sur la régularité de la séance d'ouverture\n  Entre la publication des résultats et la notification de l'attribution — recours sur les critères\n d'évaluation appliqués\n  Après la publication des résultats d'attribution — recours du soumissionnaire non retenu\nÀ chacune de ces étapes, le candidat ou soumissionnaire adresse d'abord son recours par écrit au\nMaître d'Ouvrage (Directeur Général de l'INSAPT), qui dispose d'un délai à préciser dans le Dossier\nd'Appel d'Offres pour répondre. Le Service Passation des Marchés (SPM) instruit le dossier et\nprépare la réponse motivée du Directeur Général.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f\n16.4.2 Second Niveau — Comité de Règlement des Différends de l'ARMP\nSi le désaccord persiste après la réponse du Directeur Général, ou en l'absence de réponse dans le\ndélai imparti, le candidat ou soumissionnaire peut saisir le Comité de Règlement des Différends\ninstitué auprès de l'Autorité de Régulation des Marchés Publics (ARMP), conformément aux Articles\n60(k) et au Titre VI du Décret N°002130/PR/2020. Ce recours est suspensif de la procédure de\npassation du marché en cours. L'ARMP statue sur le litige et peut prononcer les sanctions prévues\npar le Code, y compris l'annulation d'une attribution effectuée en violation de la réglementation ou en\nmarge des règles de transparence et d'équité (Article 61 du CMP).\nCoordonnées de l'ARMP : Autorité de Régulation des Marchés Publics, N'Djaména, Tchad —\ncontact@armp-tchad.com — +235 66 29 68 05 — armp-tchad.com.\nFONDEMENT LÉGAL : Le mécanisme de recours décrit ci-dessus s'applique exclusivement aux marchés relevant de\n la procédure de passation directe de l'INSAPT (hors CPA). Pour les commandes de réactifs et produits de santé\n relevant du canal CPA, les éventuels litiges relatifs à la procédure d'acquisition relèvent de la compétence de la CPA\n et de ses propres procédures de recours, conformément au Chapitre 3 du présent Manuel. L'INSAPT demeure\n responsable du signalement à la CPA de tout incident de qualité ou de conformité constaté à la réception.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 17, "title": "SUIVI, KPIS & REPORTING", "content": "CHAPITRE 17 — SUIVI, KPIS & REPORTING\n 17.1 Indicateurs Clés de Performance (KPIs)\n RESPONS\n # INDICATEUR CIBLE FRÉQUENCE SOURCE DOMAINE\n ABLE\n1 % du PPM exécuté dans les > 80 % Trim. PPM vs réel SPM Général\n délais prévus\n2 Délai moyen de traitement d'un ≤ délai CMP Mens. Dossiers SPM Général\n marché direct marchés\n3 % des commandes produits ≥ 95 % Trim. Registre CPA SPM CPA\n santé transitant par la CPA\n4 Nombre de dérogations CPA < 3/an Annuel Registre dérog. SPM CPA\n hors urgences déclarées\n5 Montant des achats d'urgence / < 10 % Trim. Registre SPM Général\n total des achats urgences\n6 Taux de marchés en AO ouvert > 85 % AO Semes. Registre SPM Général\n vs gré à gré marchés\n7 Taux d'exécution budgétaire > 90 % Semes. Comptabilité Agence Cpt. Finance\n acquisition\n8 Taux de réactifs périmés / stock <3% Mens. Inventaire LNSP CPA/Stock\n total LNSP LNSP\n9 Incidents qualité produits CPA 100 % Chaque Fiche incident Gest. Stock CPA\n notifiés dans les 48h incident\n1 Score moyen évaluation des > 75 % Annuel Fiches éval. SPM Fournisseur\n 0 fournisseurs directs s\n17.2 Archivage\nL'ensemble des dossiers de marchés — y compris les commandes CPA, les notifications d'incidents et les\ndérogations — est archivé par le SPM pendant une durée minimale de dix (10) ans après la clôture du\nmarché ou de la commande, sous format papier et numérique.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 18, "title": "CADRE DE COORDINATION AVEC LES", "content": "CHAPITRE 18 — CADRE DE COORDINATION AVEC LES\nPARTENAIRES TECHNIQUES ET FINANCIERS (PTF)\n\n18.1 Principe de Superposition des Règles\nL'INSAPT reçoit un financement combiné : budget de l'État tchadien, ressources propres, et appuis de\nPartenaires Techniques et Financiers (PTF) internationaux — notamment l'OMS, l'Union Européenne,\nl'AFD, le Fonds Pandémique (The Pandemic Fund), Africa CDC et la Banque Mondiale. Le principe\ndirecteur est celui de la superposition des règles : le droit tchadien (Code des Marchés Publics, Décret\nN°002130/PR/2020) demeure le socle juridique de toute acquisition réalisée sur le territoire tchadien par\nl'INSAPT en tant qu'Autorité Contractante ; les règles du PTF s'appliquent en complément, et prévalent\nsur les dispositions nationales uniquement dans la mesure expressément prévue par l'accord de\nfinancement, conformément au Décret N°0022/PR/PM/SGG/2024 portant règles dérogatoires spécifiques\naux marchés publics sur financement extérieur.\n  Lorsqu'un accord de financement PTF est muet sur un point, le Code des Marchés Publics du\n Tchad s'applique par défaut.\n  Lorsqu'un accord de financement PTF prévoit une règle dérogatoire (méthode de sélection, seuil,\n non-objection, liste de fournisseurs inéligibles), cette règle prévaut pour les marchés financés par\n ce PTF, et doit être documentée dans le dossier de marché.\n  En cas de cofinancement (État + PTF, ou plusieurs PTF), la CPM applique la règle la plus stricte\n entre les bailleurs, sauf accord de cofinancement contraire signé par toutes les parties.\n  Le Décret N°0022/PR/PM/SGG/2024 dispense les marchés financés à 100% par dons extérieurs de\n certaines règles de droit commun du Code des Marchés Publics, sous réserve du respect des\n seuils d'approbation qu'il fixe (Maître d'Ouvrage jusqu'à 100 000 000 FCFA ; Ministre chargé du\n Plan au-delà) et de la revue préalable du bailleur ou de la DGCMP selon le cas (Art. 2 et 3 du\n Décret).\n\n18.2 Tableau Comparatif des Principaux PTF\n PTF Cadre de référence Méthodes / seuils clés Points de vigilance Contact/\n Référence\n OMS WHO Procurement Sélection par mise en Pré-qualification des who.int/\n Policy — appels concurrence obligatoire ; fournisseurs distincte about/\n d'offres (ITB) et principe de \"best value for du RFQ national ; accountability/\n demandes de money\" (combinaison exigences procurement\n propositions (RFP) ; qualité-prix, non le prix d'assurance qualité\n comité d'examen des seul) pour produits de\n contrats (CRC) pour santé\n les marchés à forte\n valeur\n Union PRAG — Seuils : ≥ 300 000 € appel Non-objection ec.europa.eu\n Européenne Procurement and d'offres international systématique de la — PRAG\n Grants for EU restreint ; 20 000–300 Délégation UE avant\n external actions 000 € procédure lancement et avant\n (guide pratique) négociée concurrentielle ; attribution ; règles de\n ≤ 20 000 € marché à bon nationalité/origine ;\n de commande unique Early Warning\n System (exclusion)\n AFD Guidelines for Aide entièrement déliée Déclaration afd.fr/fr/\n Procurement of AFD- depuis 2002 (aucune d'Intégrité, ressources\n Financed Contracts restriction de nationalité, d'Éligibilité et de\n in Foreign Countries hors embargo Responsabilité E&S\n (dernière version en international) ; marge de obligatoire dans\n vigueur) préférence nationale chaque DAO ; revue\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fplafonnée à 15% biens / a priori ou a\n 7,5% travaux posteriori selon\n capacité de\n l'emprunteur\n The Pandemic Opérations via L'INSAPT ne reçoit pas Vérifier thepandemicfu\n Fund Entités de Mise en de fonds directement ; les systématiquement nd.org\n Œuvre (IE) règles de passation QUELLE IE gère le\n accréditées (Banque applicables sont celles de financement — les\n Mondiale, OMS, l'IE accréditée désignée règles procédurales\n UNICEF, BAD, etc.) dans l'accord de projet en découlent\n entièrement ;\n contrôles fiduciaires\n stricts et audits\n réguliers\n Africa CDC Mécanisme Africain Agrégation de la Complémentaire, africacdc.org/\n d'Achats Groupés demande de plusieurs non substitutif, au appm\n (African Pooled États membres UA pour canal CPA national ;\n Procurement produits de santé l'INSAPT participe\n Mechanism — prioritaires ; accords- via le point focal KA-\n APPM), lancé 2024 cadres non exclusifs avec GHLP et coordonne\n fournisseurs multiples avec la CPA pour\n éviter les doublons\n de commande\n Banque Cadre de Passation Jusqu'à 71 Non-objection worldbank.org\n Mondiale des Marchés (2016) méthodes/approches de obligatoire à 3 — STEP\n — Règlement de marché possibles ; seuils étapes clés (dossier,\n Passation des de revue préalable (\"prior évaluation,\n Marchés pour les review\") fixés par projet attribution) si le\n Emprunteurs FPI selon le niveau de risque, marché est en revue\n via la plateforme STEP préalable ; sanctions\n et liste d'exclusion\n de la Banque à\n vérifier\n\n18.3 Règles de Non-Objection et de Revue Préalable\nPour tout marché cofinancé ou entièrement financé par un PTF appliquant un mécanisme de revue\npréalable (Banque Mondiale, UE, AFD selon seuils), le SPM soumet les documents suivants à la non-\nobjection du bailleur avant de poursuivre à l'étape suivante :\n  Le Dossier d'Appel d'Offres (DAO) ou la demande de propositions, avant publication\n  Le rapport d'évaluation des offres/propositions et la recommandation d'attribution, avant notification\n au soumissionnaire retenu\n  Le projet de"}, {"num": 19, "title": "BIBLIOTHÈQUE DE CLAUSES CONTRACTUELLES", "content": "CHAPITRE 19 — BIBLIOTHÈQUE DE CLAUSES CONTRACTUELLES\nTYPES\nLes clauses ci-dessous constituent le socle minimal à intégrer dans tout contrat de l'INSAPT, en\ncomplément du Cahier des Clauses Administratives Générales (CCAG) prévu par le Code des Marchés\nPublics. Leur formulation s'inspire des meilleures pratiques internationales (y compris les manuels USG\nde type FAR/AIDAR fournis en référence) adaptées au contexte juridique tchadien.\n\n19.1 Clauses Générales d'Exécution\n  Objet et périmètre du contrat — description précise des biens/services/travaux, références au\n CCTP\n  Prix et modalités de paiement — prix ferme ou révisable, devise, échéancier, pénalités de retard de\n paiement (Titre IV, Chapitre 3, Section 5 du Code des Marchés Publics)\n  Délai d'exécution et pénalités de retard — taux journalier de pénalité plafonné, mise en demeure\n préalable\n  Garanties — garantie de soumission, garantie de bonne exécution, garantie de restitution d'avance\n (Chapitre 8.5 du Manuel)\n  Réception et inspection — renvoi au PVIR (Annexe 5.B) et, pour les produits de santé, à la\n procédure CPA (Chapitre 3)\n  Cession et sous-traitance — interdiction de cession sans accord écrit préalable de l'INSAPT ;\n obligation de déclaration des bénéficiaires effectifs du sous-traitant (Décret\n N°0104/PT/PM/SGG/2022)\n\n19.2 Clause Anti-Corruption et Intégrité\nLe titulaire certifie qu'il n'a pas offert, donné ou promis d'avantage indu à un agent de l'INSAPT ou à tout\ntiers en vue d'obtenir ou de conserver le marché. Toute violation constatée entraîne la résiliation immédiate\ndu contrat aux torts exclusifs du titulaire, sans préjudice des poursuites judiciaires prévues aux articles\n214 et suivants du Code des Marchés Publics et à l'article 217(g) du Code Pénal, ainsi que, pour les\nmarchés à financement PTF, l'application des sanctions propres au bailleur (Chapitre 18.6) et la\ntransmission du dossier à l'ARMP.\n\n19.3 Clause de Conflit d'Intérêts\nLe titulaire déclare l'absence de tout lien familial, capitalistique ou hiérarchique avec un membre de la\nCPM, de l'Agence Comptable, ou de la Direction Générale de l'INSAPT impliqué dans l'attribution du\nmarché. Toute situation de conflit d'intérêts survenant en cours d'exécution doit être déclarée sans délai\npar écrit.\n\n19.4 Confidentialité et Propriété Intellectuelle\n  Confidentialité des informations sanitaires, épidémiologiques et de laboratoire échangées dans le\n cadre du contrat, y compris après son terme\n  Propriété des livrables et données générées dans le cadre du marché — transfert à l'INSAPT sauf\n stipulation contraire de l'accord de financement PTF\n  Protection des données à caractère personnel conformément à la réglementation tchadienne\n applicable\n\n19.5 Force Majeure\nAucune partie n'est tenue responsable d'un manquement résultant d'un événement de force majeure\n(catastrophe naturelle, épidémie déclarée, conflit armé, décision gouvernementale imprévisible)\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f\néchappant à son contrôle raisonnable. La partie affectée notifie l'autre partie par écrit dans un délai de\nsept (7) jours et propose un plan de reprise ou de résiliation à l'amiable.\n\n19.6 Résiliation\n  Résiliation pour faute — manquement grave non corrigé dans un délai de mise en demeure de\n quinze (15) jours\n  Résiliation pour convenance de l'INSAPT — moyennant préavis écrit et indemnisation des\n prestations dûment exécutées\n  Résiliation de plein droit en cas de fausse déclaration sur les bénéficiaires effectifs (Décret\n N°0104/PT/PM/SGG/2022) ou de découverte d'une fraude/corruption\n\n19.7 Règlement des Différends\nTout différend fait d'abord l'objet d'une tentative de règlement amiable entre les parties dans un délai de\ntrente (30) jours. À défaut, il est porté devant les juridictions compétentes du Tchad, sauf clause d'arbitrage\nspécifique convenue pour les marchés à financement international, et sans préjudice des voies de recours\nprévues au Chapitre 16.4 du Manuel (recours ARMP).\n\n19.8 Audit et Droit d'Accès\nLe titulaire s'engage à conserver les pièces justificatives du marché pendant dix (10) ans et à donner\naccès, sur demande, à l'Audit Interne de l'INSAPT, à la Cour des Comptes, à l'ARMP, ainsi qu'aux\nauditeurs mandatés par tout PTF cofinançant le marché.\n\n19.9 Assurance et Responsabilité\nPour les marchés de travaux et les prestations impliquant du personnel sur site, le titulaire souscrit une\npolice d'assurance responsabilité civile et accidents du travail dont la preuve est produite avant le\ndémarrage de l'exécution.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f\nANNEXE N — FORMULAIRE DE COORDINATION CPA\n\nSECTION 1 — FORMULAIRE DE COMMANDE À LA CPA\n N° de référence INSAPT de la\n commande :\nDate de la commande :\nDirection / Unité demandeuse :\nResponsable technique :\nN° du Bon de Réservation de Crédits\n (BRC) :\nExercice budgétaire / Ligne\n budgétaire :\nSource de financement (État / PTF /\n Ressources propres) :\nPTF concerné (le cas échéant) :\n\nSECTION 2 — DÉTAIL DES PRODUITS COMMANDÉS\n SPÉCIFICATION\n DÉNOMINATION COMMUNE / DATE DE FSR\n # QTÉ UNITÉ\n DU PRODUIT CONDITIONNE BESOIN ?\n MENT\n\nFSR ? = Formulaire de Spécifications de Réactifs (Annexe R-1.A) joint à la commande | ☐ Oui ☐ Non ☐ N/A\n\nSECTION 3 — FICHE DE SUIVI DE LA CO"}];
+const NOCPA_CHAPTERS = [{"num": 1, "title": "PRÉAMBULE", "content": "CHAPITRE 1 — PRÉAMBULE\n 1.1 Introduction\nL'Institut National de Santé Publique du Tchad (INSAPT) est un Établissement Public à caractère\nScientifique et Technique (EPST) doté de la personnalité morale et de l'autonomie de gestion, créé par la\nLoi N°011/PR/2020 du 10 juillet 2020 et organisé par le Décret N°2624/PR/PM/MSPP/2023 du 18\nseptembre 2023. Il regroupe notamment la Direction Générale, le Centre de Veille Sanitaire (CVS), le\nLaboratoire National de Santé Publique (LNSP) et le Centre des Opérations d'Urgence en Santé Publique\n(COUSP).\nEn tant qu'EPST, l'INSAPT est assujetti au Code des Marchés Publics du Tchad (Décret\nN°002130/PR/2020) pour l'ensemble de ses acquisitions financées sur fonds publics, tout en disposant\nd'une autonomie de gestion administrative et financière reconnue par ses textes statutaires : le Directeur\nGénéral signe les marchés en qualité d'Autorité Contractante, l'Institut constitue et préside sa propre\nCommission de Passation des Marchés (CPM) et gère son propre Plan de Passation des Marchés (PPM).\n1.2 Objet du Manuel\nLe présent Manuel de Politiques et Procédures de Passation des Marchés a pour objet de :\n  Établir un cadre unique, cohérent et opposable régissant l'ensemble des acquisitions de\n l'INSAPT, quelle que soit la source de financement (budget de l'État, ressources propres,\n financement de Partenaires Techniques et Financiers) ;\n  Traduire en procédures opérationnelles concrètes les exigences du Code des Marchés Publics\n du Tchad et des textes statutaires de l'INSAPT ;\n  Préciser les modalités de passation directe applicables aux produits de santé par la CPM ;\n  Fournir au personnel de l'INSAPT des outils, modèles et procédures normalisées (SOP)\n garantissant la cohérence, la traçabilité et l'auditabilité de chaque acquisition ;\n  Intégrer les exigences spécifiques des principaux partenaires techniques et financiers de\n l'INSAPT.\n1.3 Champ d'Application et Limites du Manuel\nLe présent manuel s'applique à :\n  Toutes les acquisitions de biens, y compris les produits de santé, services, travaux et prestations\n intellectuelles financées sur le budget de l'État alloué à l'INSAPT ;\n  Toutes les acquisitions financées sur ressources propres de l'INSAPT, conformément à l'Article 4\n du Décret N°002130/PR/2020 ;\n  Toutes les acquisitions réalisées dans le cadre de projets financés par des Partenaires\n Techniques et Financiers (PTF), sous réserve des dispositions particulières du Chapitre 18 ;\n  Les modalités particulières applicables à l'acquisition directe des produits de santé par la CPM\n (Chapitre 3) ;\n  Tout le personnel de l'INSAPT impliqué dans des fonctions d'expression de besoin, de\n préparation, d'évaluation, d'approbation ou d'autorisation de marchés ;\n  Les prestataires, fournisseurs et entrepreneurs externes de l'INSAPT, dans la mesure où ils\n contractent avec l'Institut.\nLimites : lorsqu'une convention, un accord ou un protocole signé entre l'INSAPT et un partenaire technique\net financier comporte des dispositions plus contraignantes que le présent manuel, ces dispositions\nprévalent pour les acquisitions financées par ce partenaire, conformément au principe de superposition\ndes règles énoncé au Chapitre 18.1. Le présent manuel ne se substitue pas aux textes légaux et\nréglementaires qu'il met en œuvre ; en cas de divergence d'interprétation, le Code des Marchés Publics\net les textes statutaires de l'INSAPT font foi.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f1.4 Révisions du Manuel\nLe présent manuel est un document vivant, appelé à évoluer avec les textes légaux et réglementaires\napplicables, les orientations institutionnelles de l'INSAPT et les enseignements tirés de sa mise en œuvre.\nToute révision est initiée par le Service de Passation des Marchés (SPM), validée par la Direction Générale\net fait l'objet d'une nouvelle version numérotée, accompagnée d'une note de révision précisant la nature\ndes changements et les sections concernées. La version en vigueur est celle publiée sur les canaux\nofficiels internes de l'INSAPT ; toute version antérieure est réputée caduque dès l'approbation de la\nnouvelle version.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 2, "title": "CONSIDÉRATIONS GÉNÉRALES", "content": "CHAPITRE 2 — CONSIDÉRATIONS GÉNÉRALES\n 2.1 Principes de Passation des Marchés\nToute acquisition conduite par l'INSAPT, quel qu'en soit le montant ou la source de financement, obéit aux\nprincipes fondamentaux énoncés par le Code des Marchés Publics du Tchad (Décret\nN°002130/PR/2020) :\n  Économie et efficacité — obtenir la meilleure valeur pour l'argent public, en tenant compte du\n prix, de la qualité, des délais et des coûts sur le cycle de vie ;\n  Libre accès à la commande publique et égalité de traitement des candidats — aucune\n discrimination fondée sur la nationalité, la taille ou l'origine du soumissionnaire, hors dispositions\n légales de préférence nationale ;\n  Transparence des procédures — publicité adéquate des avis, des critères d'évaluation et des\n résultats d'attribution ;\n  Mise en concurrence effective — recours systématique à la méthode de sélection compétitive\n correspondant au montant et à la nature du besoin ;\n  Intégrité et redevabilité — traçabilité documentaire de chaque décision et responsabilité\n individuelle des agents impliqués.\n2.2 Séparation des Tâches\nAucune personne ne peut cumuler, pour une même acquisition, plus d'une des fonctions suivantes :\nexpression du besoin, préparation du dossier de consultation, évaluation des offres, décision d'attribution,\nordonnancement du paiement et réception des biens ou services. Cette séparation des tâches est mise\nen œuvre à travers la Matrice RACI de la Passation des Marchés (Chapitre 4.4) et la composition\npluridisciplinaire de la Commission de Passation des Marchés (Chapitre 4.3). Elle constitue une garantie\nstructurelle contre la fraude, la collusion et les conflits d'intérêts, indépendamment de l'intégrité individuelle\ndes agents concernés.\n2.3 Transparence, Redevabilité et Éthique\nL'INSAPT s'engage à conduire ses acquisitions dans des conditions de transparence permettant à tout\ncandidat, à l'ARMP et à tout partenaire technique et financier de vérifier la régularité de la procédure\nsuivie. Chaque agent impliqué dans la passation des marchés est individuellement redevable des\ndécisions qu'il prend ou recommande, et doit être en mesure d'en justifier le fondement documentaire. Le\ndispositif de recours interne et externe (Chapitre 16.4) et le mécanisme de signalement (Chapitre 16.3,\nAnnexe T) garantissent que tout manquement à ces principes puisse être signalé, instruit et sanctionné.\n2.4 Code de Déontologie\nTout agent de l'INSAPT impliqué dans la passation des marchés s'engage à :\n  Agir avec intégrité, impartialité et probité dans l'exercice de ses fonctions ;\n  Traiter tous les candidats et titulaires avec équité, sans favoritisme ni discrimination ;\n  Préserver la confidentialité des informations sensibles (offres, évaluations, données financières)\n jusqu'à leur publication autorisée ;\n  Déclarer sans délai tout conflit d'intérêts, réel, potentiel ou apparent, et se retirer du processus\n décisionnel concerné ;\n  Refuser tout avantage, cadeau, faveur ou paiement susceptible d'influencer, ou de paraître\n influencer, une décision de passation de marché ;\n  Signaler toute irrégularité, tentative de corruption ou pression indue dont il aurait connaissance,\n par les canaux prévus au Chapitre 16.3.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f2.5 Exemples de Comportements Non-Éthiques\nSans que cette liste soit exhaustive, constituent notamment des manquements graves à la déontologie de\nla passation des marchés :\n  La sollicitation, l'acceptation ou l'offre de pots-de-vin, commissions occultes ou avantages en\n nature en lien avec un marché ;\n  La divulgation anticipée d'informations confidentielles (montant estimatif, contenu d'une offre\n concurrente, critères d'évaluation non publiés) à un candidat ;\n  La manipulation des spécifications techniques ou des critères d'évaluation en faveur d'un\n candidat déterminé ;\n  La collusion entre soumissionnaires ou entre un agent de l'INSAPT et un soumissionnaire\n (trucage des offres) ;\n  La participation à une décision d'attribution alors qu'il existe un lien familial, capitalistique ou\n hiérarchique non déclaré avec un candidat ;\n  Le fractionnement délibéré d'un besoin dans le but de se soustraire aux seuils de mise en\n concurrence ou de contrôle ;\n  La falsification, l'antidatation ou la destruction de pièces du dossier de marché.\n2.6 Obligations des Agents\nTout agent participant, à quelque titre que ce soit, à une procédure de passation de marché a l'obligation\nde :\n  Signer, le cas échéant, une déclaration d'absence de conflit d'intérêts avant toute participation à\n l'évaluation ou à la décision d'attribution ;\n  Respecter scrupuleusement les seuils, méthodes et délais fixés par le Code des Marchés\n Publics et le présent manuel ;\n  Documenter et archiver chaque étape de la procédure conformément aux exigences de\n traçabilité du Chapitre 17.2 ;\n  Se conformer aux instructions de la Commission de Passation des Marchés et de la Direction\n Générale, sauf instruction manifestement contraire à la loi, auquel cas il a le devoir de la signaler\n ;\n  Coopérer pleinement avec tout audit, contrôle ou enquête portant sur une procédure à laquelle il\n a participé.\nTout manquement aux obligations du présent chapitre expose son auteur aux sanctions disciplinaires,\nadministratives et, le cas échéant, pénales prévues par le Code des Marchés Publics, le Code Pénal"}, {"num": 3, "title": "APPROVISIONNEMENT EN PRODUITS DE", "content": "CHAPITRE 3 — APPROVISIONNEMENT EN PRODUITS DE\n SANTÉ : PASSATION DIRECTE PAR LA CPM\n 3.1 Cadre Général\nLes produits de santé (médicaments, réactifs de laboratoire, dispositifs médicaux et autres produits\npharmaceutiques) relèvent, par principe, du mandat national de la Centrale Pharmaceutique d'Achat\n(CPA), unique structure légalement chargée de l'approvisionnement du secteur public tchadien en ces\ncatégories de produits.\nToutefois, en vertu de l'autonomie de gestion administrative et financière reconnue à l'INSAPT en sa\nqualité d'Établissement Public à caractère Scientifique et Technique (Décret N°2624/PR/PM/MSPP/2023),\nl'État peut accorder à l'INSAPT une dérogation formelle l'autorisant à conduire directement, via sa propre\nCommission de Passation des Marchés (CPM), l'ensemble de ses acquisitions de produits de santé, sans\npassage par le canal CPA.\nLe présent chapitre décrit les modalités applicables dans ce scénario : l'INSAPT assure l'intégralité du\ncycle de passation des marchés de produits de santé — expression des besoins, spécifications\ntechniques, mise en concurrence, attribution, contractualisation, réception et paiement — selon les\nprocédures standard du Code des Marchés Publics du Tchad (Décret N°002130/PR/2020) et sous le\ncontrôle de l'Autorité de Régulation des Marchés Publics (ARMP), au même titre que ses autres catégories\nd'acquisitions.\n3.2 Base Juridique de la Dérogation\nLa dérogation à l'obligation de passage par la CPA repose sur les éléments suivants :\n  Une décision ou correspondance officielle du Ministère de tutelle (Ministère de la Santé Publique\n et de la Prévention) et/ou de la CPA elle-même, autorisant expressément l'INSAPT à conduire\n ses propres acquisitions de produits de santé ;\n  La confirmation que cette dérogation s'inscrit dans le cadre de l'autonomie de gestion reconnue\n à l'INSAPT par son décret d'organisation (Décret N°2624/PR/PM/MSPP/2023) ;\n  L'engagement de l'INSAPT à se conformer strictement, pour ces acquisitions, au Code des\n Marchés Publics, aux seuils de contrôle et d'approbation en vigueur (Décret N°2499/PR/2020) et\n à la supervision de l'ARMP.\nL'original de la décision de dérogation est archivé par le Secrétariat Général de l'INSAPT et transmis pour\ninformation à l'ARMP et à la CPA. Le présent manuel demeure applicable, dans sa version antérieure\nrelative à la coordination avec la CPA, dans l'hypothèse où cette dérogation viendrait à être retirée ou\nn'aurait pas encore été formellement accordée ; le Service de Passation des Marchés (SPM) est chargé\nde vérifier, avant toute acquisition de produits de santé, le statut en vigueur de la dérogation.\n3.3 Rôle de la CPM pour les Produits de Santé\nDans ce scénario, la Commission de Passation des Marchés (CPM) de l'INSAPT est compétente pour\nl'ensemble des acquisitions de produits de santé, selon les mêmes règles de composition, de seuils et de\nprocédure que pour ses autres acquisitions (Chapitre 4). Le LNSP, en tant qu'unité technique\nconsommatrice, conserve la responsabilité de :\n  L'expression des besoins et l'élaboration des spécifications techniques des réactifs, kits de\n diagnostic, milieux de culture, contrôles et calibrateurs ;\n  La participation, à titre consultatif, à l'évaluation technique des offres pour les produits de santé,\n en appui de la CPM ;\n  La réception, l'inspection qualité (y compris chaîne du froid) et la gestion en stock des produits\n reçus, selon les procédures du Chapitre 14.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f\nLa CPM assure la mise en concurrence (appel d'offres, RFQ ou consultation directe selon les seuils\napplicables — Chapitre 7), la pré-qualification des fournisseurs de produits de santé (Chapitre 6.2.2),\nl'attribution, la contractualisation et le suivi contractuel (Chapitres 8 et 9), dans les mêmes conditions que\npour toute autre acquisition de l'INSAPT.\n3.4 Pré-qualification des Fournisseurs de Produits de Santé\nL'INSAPT constitue et tient à jour son propre répertoire de fournisseurs qualifiés pour les produits de santé\n(Annexe S — Répertoire des Fournisseurs), selon les critères généraux de qualification (Chapitre 6.2.1)\ncomplétés par des critères spécifiques à la nature du produit :\n  Autorisation de mise sur le marché ou équivalent réglementaire pour les produits\n pharmaceutiques et réactifs, délivrée par l'autorité nationale compétente ;\n  Certification de bonnes pratiques de fabrication ou de distribution (BPF/BPD), ou normes\n internationales équivalentes (OMS, ISO 13485 pour les dispositifs médicaux) ;\n  Capacité démontrée à maintenir la chaîne du froid pour les produits thermosensibles, le cas\n échéant ;\n  Références de fourniture à des structures de santé publique ou à des programmes de santé\n similaires.\n3.5 Financements PTF pour les Produits de Santé\nLorsqu'un Partenaire Technique et Financier finance l'acquisition de produits de santé pour le compte de\nl'INSAPT, les règles de superposition énoncées au Chapitre 18.1 s'appliquent : les procédures du bailleur\nprévalent dans la mesure où elles sont plus contraignantes, et la CPM documente cette articulation dans\nl'Addendum PTF (Annexe U) propre à chaque projet concerné.\n3.6 Indicateurs de Suivi\nLa performance de la fonction d'approvisionnement en produits de santé est suivie au même titre que les\nautres catégories d'achats, à travers les indicateurs du Chapitre 17.1, complét"}, {"num": 4, "title": "GOUVERNANCE & RÔLES", "content": "CHAPITRE 4 — GOUVERNANCE & RÔLES\n 4.1 Structure de Gouvernance des Marchés\nConformément à la Loi N°011/PR/2020 et au Décret N°2624/PR/PM/MSPP/2023 portant organisation et\nfonctionnement de l'INSAPT, la gouvernance des marchés publics de l'Institut s'organise autour de quatre\nniveaux décisionnels. En sa qualité d'EPST, l'INSAPT jouit d'une autonomie de gestion lui permettant de\nconstituer ses propres organes de passation des marchés, dans le strict respect du Décret\nN°002130/PR/2020 (Code des Marchés Publics).\n4.2 Organes d'Administration Impliqués\n ORGANE RÔLE EN MATIÈRE DE MARCHÉS NIVEAU D'AUTORISATION\nConseil d'Administration Approbation des marchés de grande envergure, Avis préalable requis pour marchés >\n validation de la politique d'acquisition, supervision 50 000 000 FCFA (Art. 15 Décret\n des audits 2624)\nDirection Générale (DG) Autorité Contractante de l'INSAPT en vertu du Approbation finale de tous les\n Décret N°2624/PR/PM/MSPP/2023, signature des marchés dans les seuils légaux\n marchés, supervision de la conformité au Code des\n Marchés Publics\nSecrétariat Général Coordination administrative, archivage, Visa administratif — tous marchés\n correspondances officielles y compris avec l'ARMP\nService Passation des Gestion opérationnelle de toutes les procédures Instruction de tous les marchés ;\n Marchés (SPM) d'acquisition et de passation directe des produits de point de contact fournisseurs de\n santé ; point focal ARMP produits de santé\nAgence Comptable / Disponibilité budgétaire, engagement financier, Certification de disponibilité des\n Finance paiement des fournisseurs et de la CPM crédits avant tout engagement\nResponsables Expression des besoins, spécifications techniques, Validation des spécifications FSR et\n Techniques (CVS, réception des livraisons des bons de réception\n LNSP, CFRSP)\nAudit Interne Contrôle a posteriori, vérification de la conformité Contrôle indépendant — sans\n au Code des Marchés Publics, rapports d'audit pouvoir d'approbation\n4.3 Commission de Passation des Marchés (CPM)\n FONDEMENT LÉGAL : Conformément aux Articles 31 à 44 du Décret N°002130/PR/2020 (Code des Marchés\n Publics), tout établissement public assujetti au Code doit constituer une Commission de Passation des Marchés (CPM)\n pour les marchés dépassant les seuils de la procédure simplifiée. L'INSAPT, en tant qu'EPST, constitue et préside sa\n propre CPM.\n\n4.3.1 Composition de la CPM\n  Président : Directeur Général ou son représentant dûment mandaté\n  Membre : Responsable du Service Passation des Marchés (Secrétaire de la CPM)\n  Membre : Responsable Financier (Agence Comptable)\n  Membre : Expert technique du domaine concerné (CVS, LNSP ou CFRSP selon objet du marché)\n  Membre : Représentant de l'Administration de tutelle technique (Ministère de la Santé Publique et de\n la Prévention), conformément à l'Art. 34(1)(d) du CMP\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f Membre observateur (sans droit de vote) : Représentant de l'Organe de Contrôle des Marchés\n Publics (DGCMP), conformément à l'Art. 34(1)(d) du CMP — distinct de l'Audit Interne de l'INSAPT,\n qui n'intervient qu'en contrôle a posteriori (Chapitre 17)\n  Observateur extérieur : Représentant du PTF concerné (le cas échéant, selon accord de\n financement)\n\n4.3.2 Fonctionnement\n  Le quorum est atteint avec la présence du Président, d'au moins deux (2) membres et du Secrétaire\n (Art. 40 CMP)\n  Les décisions sont prises à la majorité des membres présents\n  Un procès-verbal signé est établi à l'issue de chaque séance et conservé au dossier de marché\n  Tout membre ayant un intérêt dans un marché est tenu de se récuser (Déclaration Annexe 1.F)\n  La CPM n'intervient pas pour les commandes de produits de santé, qui relèvent des procédures\n propres à la Centrale\n4.4 Matrice RACI de la Passation des Marchés\n ACTIVITÉ DG SPM Finance Tech. CPM Audit CPA\nExpression des besoins I C C R — — —\nCommande directe (produits A R I C — — I(reçoit)\n de santé)\nCertification budgétaire A I R I — — —\nPréparation du dossier d'AO A R C C — — —\n (marchés )\nÉvaluation des offres () I C C C R — —\nAttribution et signature du R C C — C I —\n marché\nRéception des produits A C — R — — —\nPaiement fournisseur A C R R — — —\nArchivage & reporting I R C — — A —\nR = Responsable | A = Approbateur | C = Consulté | I = Informé\n4.5 Politique de Conflits d'Intérêts\nTout agent de l'INSAPT impliqué dans un processus d'acquisition (y compris dans la formulation de\nspécifications transmises au SPM) est tenu de déclarer tout intérêt personnel, familial ou professionnel\nsusceptible d'influencer son jugement. La Déclaration de Conflit d'Intérêts (Annexe 1.F) est obligatoire avant\ntoute participation à une CPM. Tout manquement constitue une faute disciplinaire grave.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 5, "title": "IDENTIFICATION DES BESOINS &", "content": "CHAPITRE 5 — IDENTIFICATION DES BESOINS &\n PLANIFICATION\n 5.1 Plan de Passation des Marchés (PPM)\nL'INSAPT élabore chaque année un Plan de Passation des Marchés (PPM) pour l'ensemble de ses unités\norganisationnelles. Le PPM comprend deux volets distincts : (1) les acquisitions directes de l'INSAPT ; (2) les\nprévisions d'acquisition de réactifs, médicaments et produits de santé, planifiées et exécutées directement par\nle SPM selon les mêmes procédures que les autres catégories d'achats.\n\n5.1.1 Contenu minimum du PPM\n  Nature et description de chaque acquisition prévue (avec distinction par catégorie de dépense\n (produits de santé, biens, services, travaux))\n  Estimation budgétaire et source de financement\n  Méthode de passation envisagée ou méthode de passation applicable\n  Calendrier prévisionnel (lancement, évaluation/commande, signature/réception, livraison)\n  Responsable technique désigné\n\n5.1.2 Processus d'élaboration\n  Chaque direction technique soumet ses besoins au SPM avant le 30 novembre de l'année N-1, en en\n identifiant distinctement les produits de santé\n  Le LNSP soumet séparément et simultanément ses besoins en réactifs au SPM selon les procédures\n et formulaires de la CPM\n  Le SPM consolide, vérifie la cohérence et prépare le projet de PPM\n  L'Agence Comptable certifie la disponibilité des crédits\n  Le PPM est approuvé par la Direction Générale avant le 15 janvier de l'année N\n  Le PPM est transmis à l'Autorité de Régulation des Marchés Publics (ARMP) conformément à l'Article\n 9 du Décret N°002130/PR/2020\n  Le PPM est mis à jour trimestriellement\n5.2 Identification et Justification des Besoins\nToute acquisition débute par une expression formelle du besoin via le Formulaire de Demande d'Acquisition\n(FDA — Annexe 1.B). Pour les produits de santé relevant de la CPM, une version adaptée du FDA est\ntransmise directement au SPM selon ses propres formulaires (voir Annexe N).\n5.3 Étude de Marché et Estimation des Coûts\nPour les acquisitions, le SPM réalise une étude de marché fondée sur au moins trois (3) sources de prix\nindépendantes. Pour les produits de santé relevant de la CPM, le prix de référence est celui du catalogue des\nfournisseurs préqualifiés ou de ses appels d'offres en cours ; aucune étude de marché indépendante n'est\nrequise pour ces produits.\n5.4 Regroupement et Allotissement\nL'INSAPT peut regrouper des acquisitions similaires pour bénéficier d'économies d'échelle ou les allotir pour\npermettre la participation de PME locales, conformément à l'Article 72 du Décret N°002130/PR/2020. Pour les\nproduits de santé, le regroupement des commandes est encouragé pour améliorer les délais et conditions de\nlivraison.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 6, "title": "PROSPECTION DU MARCHÉ & SOURCING", "content": "CHAPITRE 6 — PROSPECTION DU MARCHÉ & SOURCING\n PRODUITS DE SANTÉ : Les sections 4.1 à 4.3 du présent chapitre s'appliquent également aux acquisitions de\n réactifs, médicaments et produits de santé, la prospection et la pré-qualification de leurs fournisseurs relevant\n de la CPM au même titre que les autres catégories d'achats (Chapitre 3).\n6.1 Prospection du Marché (acquisitions de biens et services)\nLa prospection du marché est une étape préalable pour toutes les acquisitions directes de l'INSAPT. Elle vise\nà identifier les fournisseurs potentiels, recueillir des informations sur les prix et évaluer la disponibilité des\nbiens ou services requis. Les résultats sont consignés dans un Rapport de Prospection (Annexe 2.E).\n6.2 Pré-qualification des Fournisseurs\nL'INSAPT maintient un Répertoire de Fournisseurs Qualifiés (RFQ) pour les catégories d'achats récurrents\nrelevant de sa propre compétence d'acquisition.\n\n6.2.1 Critères de qualification générale\n  Existence légale et enregistrement au RCCM du Tchad\n  Situation fiscale et sociale régulière (quitus fiscal)\n  Capacité financière démontrée\n  Références techniques pertinentes (au moins 3 sur les 5 dernières années)\n  Absence de condamnation pour fraude ou corruption\n\n6.2.2 Fournisseurs de Produits de Santé — Pré-qualification par l'INSAPT\nPRODUITS DE SANTÉ : La pré-qualification des fournisseurs de médicaments, réactifs et produits de santé\n est effectuée directement par la CPM, selon les critères généraux du présent chapitre complétés par les\n critères spécifiques du Chapitre 3.4. L'INSAPT tient son propre répertoire de fournisseurs qualifiés pour ces\n catégories (Annexe S).\n6.3 Règle des Trois Devis\n FONDEMENT LÉGAL : Conformément aux Articles 9 et 12 du Décret N°002130/PR/2020, pour les marchés relevant\n de la procédure simplifiée (de 10 000 000 FCFA jusqu'au seuil d'appel d'offres applicable par type de marché),\n l'INSAPT sollicite au minimum trois (3) devis comparatifs de fournisseurs distincts. Ces devis sont consignés dans un\n Journal de Sourcing (Annexe 2.F).\n6.4 Préférence Nationale\nConformément au Titre III, Section 3 du Décret N°002130/PR/2020, les entreprises tchadiennes bénéficient\nd'une préférence nationale lors de l'évaluation des offres dans les appels d'offres nationaux.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 7, "title": "PROCESSUS D'APPEL D'OFFRES ET RFQ", "content": "CHAPITRE 7 — PROCESSUS D'APPEL D'OFFRES ET RFQ\n PRODUITS DE SANTÉ : Les seuils et méthodes du présent chapitre s'appliquent également aux acquisitions\n de produits de santé, selon la même logique de mise en concurrence que les autres catégories d'achats.\n7.1 Seuils de Passation des Marchés et Méthodes\n FONDEMENT LÉGAL : Les seuils ci-dessous sont établis conformément aux Articles 9 à 13 du Décret\n N°002130/PR/2020 Portant Code des Marchés Publics (seuils d'appel d'offres, de procédure simplifiée et de\n consultation directe), précisés par le Décret N°2499/PR/2020 fixant les seuils de passation, de contrôle et\n d'approbation des marchés publics. En tant qu'EPST, l'INSAPT applique les seuils applicables aux Établissements\n Publics assujettis au Code.\nTRANCHE MONTANT (FCFA TTC) MÉTHODE APPROBATEUR(S) DÉLAI INDICATIF\nConsultation < 10 000 000 FCFA (tous Consultation directe Chef de service + 3–7 jours\n directe types : travaux, fournitures, sur bon de Comptable\n services, prestations commande (sans\n intellectuelles) [Art. 13 mise en\n CMP] concurrence\n formelle)\nProcédure ≥ 10 M et < 30 M FCFA Consultation DG + SPM + 15–21 jours\n simplifiée (fournitures/services) ≥ 10 restreinte (≥ 3 Comptable\n M et < 50 M FCFA devis)\n (travaux) ≥ 10 M et < 20 M\n FCFA (prestations\n intellectuelles) [Art. 9 et 12\n CMP]\nAppel d'offres ≥ 50 M et ≤ 2 milliards Appel d'offres CPM + DG + 45–60 jours\n national FCFA (travaux) ≥ 30 M et ≤ ouvert national notification ARMP\n 1 milliard FCFA\n (fournitures) ≥ 20 M et ≤\n 400 M FCFA (services) ≥\n 20 M et ≤ 500 M FCFA\n (prestations intellectuelles)\n [Art. 9 et 10 CMP]\nAppel d'offres > 2 milliards FCFA Appel d'offres CPM + DG + CA + 60–90 jours\n international (travaux) > 1 milliard FCFA ouvert international ARMP\n (fournitures) > 400 M\n FCFA (services) > 500 M\n FCFA (prestations\n intellectuelles) [Art. 11\n CMP]\nGré à gré Tout montant — conditions Marché de gré à DG + autorisation Variable\n restrictives, autorisation gré avec préalable ARMP\n préalable du Ministre en justification\n charge des marchés obligatoire et\n publics requise [Art. 45-46 autorisation ARMP\n CMP]\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f\nNote : Le recours au gré à gré (Articles 45 et 46 du Code des Marchés Publics) est strictement limité aux cas prévus par les textes en\nvigueur et requiert l'autorisation préalable du Ministre en charge des Marchés Publics ; le dossier de consultation et l'offre du\nsoumissionnaire sont ensuite soumis à la Commission de Passation des Marchés et à la DGCMP pour avis. L'interdiction de\nfractionnement des marchés pour échapper aux seuils applicables est par ailleurs strictement posée par l'Article 14 du Code.\n7.2 Dossier d'Appel d'Offres (DAO)\n  Avis d'appel d'offres (AAO) avec délai de remise des offres\n  Instructions aux soumissionnaires (IS)\n  Cahier des clauses administratives générales (CCAG)\n  Cahier des clauses techniques particulières (CCTP) avec spécifications détaillées\n  Formulaires d'offre et de soumission\n  Critères d'évaluation et de qualification pondérés\n  Formulaire de marché (projet de contrat) incluant la clause anti-corruption obligatoire\n7.3 Publication et Délais\n  Les avis d'AO nationaux sont publiés dans au moins un journal de grande diffusion au Tchad et sur le\n portail de l'ARMP (obligation légale — Article 10 du Décret N°002130/PR/2020)\n  Les avis internationaux sont publiés dans des médias internationaux reconnus selon les exigences du\n PTF\n  Le délai minimum de remise des offres est de quarante-cinq (45) jours calendaires pour un AO\n national et de soixante (60) jours pour un AO international\n  Tout raccourcissement de délai doit être justifié par l'urgence et approuvé par l'ARMP. Conformément\n à l'Article 123 du Code, le délai minimum en cas d'urgence validée par le Ministre peut être ramené à\n 20 jours calendaires.\n7.4 Ouverture et Évaluation des Offres\n  L'ouverture des plis est effectuée en séance publique par la CPM\n  Un procès-verbal d'ouverture des plis est signé par tous les membres présents\n  L'évaluation technique est effectuée avant l'évaluation financière\n  Seules les offres techniquement conformes sont évaluées financièrement\n  Le rapport d'évaluation est signé par tous les membres de la CPM et soumis au DG\n  L'INSAPT informe les soumissionnaires non retenus par écrit avec motivation\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 8, "title": "ATTRIBUTION & SIGNATURE DU CONTRAT", "content": "CHAPITRE 8 — ATTRIBUTION & SIGNATURE DU CONTRAT\n 8.1 Décision d'Attribution\nSur recommandation de la CPM, la Direction Générale arrête la décision d'attribution, formalisée par un\nMémo d'Attribution (Annexe 3.H).\n8.2 Publication des Résultats\n FONDEMENT LÉGAL : Obligation légale de publicité et de transparence des résultats d'attribution, conformément aux\n principes posés à l'Article 3(2) du Décret N°002130/PR/2020. Les résultats d'attribution sont publiés dans les supports\n de l'avis d'AO et sur le portail de l'ARMP. L'Article 138(4) du Code impose un délai strict de sept (07) jours pour insérer\n cette décision dans le Journal des Marchés Publics.\n8.3 Délai de Recours et Non-Objection\nUn délai de recours est accordé aux soumissionnaires non retenus à compter de la publication des résultats,\ndans les conditions et délais fixés au Titre VI, Chapitre 1 du Décret N°002130/PR/2020 (recours hiérarchique\nauprès du Maître d'Ouvrage, puis recours devant le Comité de Règlement des Différends de l'ARMP en cas\nde désaccord persistant — voir Chapitre 16.4 du présent Manuel). Pour les marchés financés par un PTF, la\nnon-objection formelle est requise avant la signature.\n8.4 Signature du Contrat\n FONDEMENT LÉGAL : En vertu du Décret N°2624/PR/PM/MSPP/2023, le Directeur Général de l'INSAPT est l'Autorité\n Contractante habilitée à signer tous les marchés. Pour les marchés d'un montant supérieur à 30 000 000 FCFA, le visa\n préalable du Contrôle Financier de l'État est requis conformément à la réglementation financière publique tchadienne.\n L'Agence Comptable confirme la disponibilité définitive des crédits (engagement budgétaire)\n  Le SPM vérifie la complétude du dossier administratif du titulaire\n  Pour les marchés > 30 000 000 FCFA, le visa du Contrôle Financier est requis\n  La clause anti-corruption est intégrée à tout contrat (voir ci-dessous)\nCLAUSE ANTI-CORRUPTION OBLIGATOIRE : Tout contrat signé par l'INSAPT doit comporter une clause anti-\n corruption. La violation de cette clause entraîne la résiliation immédiate et le signalement aux autorités judiciaires\n compétentes.\n8.5 Garanties Contractuelles\n TYPE DE GARANTIE MONTANT CONDITIONS\nCaution de soumission 1–2 % du montant de l'offre Requise pour tout AO national ou international\nGarantie de bonne exécution 5–10 % du montant du Requise avant signature, valable jusqu'à réception\n marché provisoire\nCaution de restitution d'avance 100 % du montant de Si avance accordée (max 20 % du montant)\n l'avance\nRetenue de garantie 5–10 % du montant des Libérée à la réception définitive\n paiements\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 9, "title": "GESTION DES CONTRATS", "content": "CHAPITRE 9 — GESTION DES CONTRATS\n 9.1 Mise en Œuvre et Suivi\nLa gestion des contrats est une responsabilité partagée entre le SPM, la direction technique et l'Agence\nComptable. Chaque contrat est suivi via une Fiche de Suivi de Contrat (FSC — Annexe 4.B). Pour les\ncommandes de produits de santé, la Fiche de Suivi de Contrat (Annexe 4.B) remplace la FSC.\n9.2 Inspection, Réception et Acceptation\n  À la livraison, le responsable technique procède à l'inspection et établit un PVIR (Annexe 5.B)\n  Pour les produits reçus via la CPM, l'inspection incluant la vérification de la chaîne du froid (Annexe\n 5.E) et des dates de péremption est obligatoire\n  Tout incident de qualité sur un produit de santé est notifié formellement au SPM dans les 48 heures\n  En cas de non-conformité, un Rapport de Non-Conformité est émis au fournisseur (ou au SPM)\n9.3 Avenant et Modification de Contrat\nTout avenant modifiant le scope, le montant ou le délai d'un contrat suit le même circuit d'approbation que le\ncontrat initial, conformément aux dispositions du Titre IV, Chapitre 4, Section 2 du Décret N°002130/PR/2020\n(« Des avenants »). Un avenant cumulé dépassant 20 % du montant initial est traité comme un nouveau\nmarché ; ce seuil sera confirmé par référence à l'article exact lors de la prochaine revue du Manuel (Mois 6),\nen lien avec la DGCMP.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 10, "title": "PERFORMANCE DES FOURNISSEURS", "content": "CHAPITRE 10 — PERFORMANCE DES FOURNISSEURS\n 10.1 Évaluation Continue\nL'INSAPT évalue systématiquement la performance de l'ensemble de ses fournisseurs, y compris ceux de\nproduits de santé, selon les mêmes critères et la même procédure (Chapitre 10).\n10.2 Critères d'Évaluation\n CRITÈRE PONDÉRATION INDICATEURS\nQualité des biens/services livrés 30 % Conformité aux spécifications, taux de défaut\nRespect des délais de livraison 25 % Livraisons à temps / total des livraisons\nQualité de la documentation fournie 15 % Complétude des documents, factures conformes\nRéactivité et service après-vente 15 % Délai de réponse aux non-conformités\nRespect des obligations 15 % Garanties, rapports, assurances à jour\n contractuelles\n10.3 Système de Classification\n  Score ≥ 80 % : Fournisseur qualifié — maintenu au Répertoire\n  Score 60–79 % : Fournisseur sous surveillance — plan d'amélioration dans les 30 jours\n  Score < 60 % ou deux évaluations insuffisantes consécutives : Suspension du Répertoire pour 12\n mois minimum\n  Fraude, faux documents ou corruption avérée : Exclusion définitive et signalement à l'ARMP et aux\n autorités judiciaires\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 11, "title": "INTÉGRATION FINANCIÈRE", "content": "CHAPITRE 11 — INTÉGRATION FINANCIÈRE\n 11.1 Vérification Budgétaire Préalable\nAucune procédure d'acquisition — directe ou via la CPM — ne peut être engagée sans certification préalable\nde disponibilité budgétaire par l'Agence Comptable de l'INSAPT, via le Bon de Réservation de Crédits (BRC).\n11.2 Processus de Facturation et de Paiement\n  Le fournisseur soumet une facture conforme accompagnée du bon de livraison et du PVIR signé\n  Le responsable technique valide la conformité de la livraison\n  Le SPM vérifie la cohérence entre la facture, le bon de commande/commande de produits de santé et\n le bon de réception\n  La facture est transmise à l'Agence Comptable pour liquidation et ordonnancement\n  Tout retard de paiement génère des intérêts moratoires conformément aux dispositions du Titre IV,\n Chapitre 3, Section 5 du Décret N°002130/PR/2020 (« Des intérêts moratoires et des pénalités ») ; le\n taux et les modalités de calcul applicables seront confirmés par référence à l'article exact lors de la\n prochaine revue du Manuel (Mois 6)\n11.3 Avances sur Marchés\nUne avance sur marché peut être accordée dans la limite de vingt pour cent (20 %) du montant du marché,\ncontre remise d'une caution bancaire de restitution d'avance. Les commandes au SPM peuvent faire l'objet\nd'un acompte selon les conditions de la CPM.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 12, "title": "PROCÉDURES OPÉRATIONNELLES", "content": "CHAPITRE 12 — PROCÉDURES OPÉRATIONNELLES\n STANDARDISÉES : PASSATION GÉNÉRALE (SOP 1 À 6)\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fSOP 01 — RÉQUISITION & PLANIFICATION DES MARCHÉS\n\n1. Objet\nLa présente Procédure Opérationnelle Normalisée (PON) décrit le processus standardisé d'expression des\nbesoins, de planification des acquisitions et d'établissement des bons de commande au sein de l'Institut\nNational de Santé Publique du Tchad (INSAPT). Elle vise à garantir que toute acquisition est justifiée, planifiée,\nbudgétée et autorisée avant son lancement, conformément au Décret N°002130/PR/2020 Portant Code des\nMarchés Publics du Tchad (CMP).\n\n2. Champ d'Application\nCette procédure s'applique à :\n  Toutes les unités organisationnelles de l'INSAPT : Direction Générale, Secrétariat Général, Centre de\n Veille Sanitaire (CVS), Laboratoire National de Santé Publique (LNSP), Centre de Formation et\n Recherche en Santé Publique (CFRSP)\n  Toutes les acquisitions de biens, services, travaux et prestations intellectuelles, quel que soit le\n montant\n  Toutes les sources de financement : budget de l'État, ressources propres, financements de\n partenaires techniques et financiers (PTF)\n Référence légale : Articles 1 à 12 du Décret N°002130/PR/2020 (CMP) — définitions, champ d'application et\n seuils de la commande publique. Loi N°011/PR/2020 portant création de l'INSAPT, Article 4 (ressources de\n l'Institut).\n\n3. Rôles & Responsabilités\n RÔLE RESPONSABILITÉ DANS CETTE PROCÉDURE\nChef de Service / Identifie le besoin, rédige les spécifications techniques, remplit le Formulaire de\n Responsable Technique Demande d'Acquisition (FDA), soumet pour validation\n (CVS, LNSP, CFRSP)\nService Passation des Vérifie la cohérence de la demande avec le Plan de Passation des Marchés\n Marchés (SPM) (PPM), consolide les demandes, conseille sur la méthode appropriée\nAgence Comptable / Vérifie et certifie la disponibilité budgétaire (Bon de Réservation de Crédits —\n Responsable Financier BRC)\nDirecteur Général (DG) Approuve les demandes dépassant le seuil délégué et valide le PPM annuel\nSecrétariat Général Enregistre et numérote les FDA, assure le suivi administratif\n\n4. Procédure\n4.1 Planification Annuelle (Plan de Passation des Marchés)\n  Chaque Chef de Service soumet ses besoins prévisionnels pour l'année N au Service Passation des\n Marchés (SPM) avant le 30 novembre de l'année N-1, en utilisant le Formulaire de Planification\n Annuelle (Annexe 1.A)\n  Le SPM consolide l'ensemble des besoins par direction, vérifie la cohérence technique et budgétaire,\n et établit le projet de Plan de Passation des Marchés (PPM)\n  L'Agence Comptable certifie la disponibilité prévisionnelle des crédits pour chaque ligne du PPM\n  La Direction Générale approuve le PPM avant le 15 janvier de l'année N\n  Le PPM approuvé est transmis à l'Autorité de Régulation des Marchés Publics (ARMP) conformément\n au CMP et publié en interne\n  Le PPM est révisé trimestriellement pour intégrer les ajustements de besoins\n\n4.2 Expression du Besoin (Réquisition)\n  Le besoin est identifié par le Chef de Service ou le responsable technique concerné\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f Le demandeur remplit le Formulaire de Demande d'Acquisition (FDA — Annexe 1.B), précisant :\n description du bien/service, quantité, spécifications techniques, justification, ligne budgétaire, urgence\n éventuelle\n  Le FDA est signé par le Chef de Service et transmis au SPM\n  Le SPM vérifie la conformité du FDA avec le PPM approuvé : (a) si le besoin figure au PPM →\n poursuite normale ; (b) si le besoin n'est pas planifié → justification complémentaire requise et mise à\n jour du PPM\n  Le SPM transmet le FDA à l'Agence Comptable pour vérification et certification de la disponibilité\n budgétaire (émission du Bon de Réservation de Crédits — BRC)\n\n4.3 Détermination de la Méthode d'Acquisition\nSur la base du montant estimé et de la nature de l'acquisition, le SPM détermine la méthode de passation\napplicable, conformément aux seuils définis au Chapitre 3 du Manuel de Politiques et Procédures de Passation\ndes Marchés de l'INSAPT et aux Articles 9-12 du CMP :\nMONTANT (FCFA TTC) MÉTHODE PROCÉDURE APPLICABLE\n< 10 000 000 Achat direct Présente PON 01 uniquement\n10 000 000 – seuils CMP Art.9 Procédure simplifiée (≥ 3 devis) PON 01 puis transition vers PON\n 03 (consultation restreinte)\n> seuils CMP Art.9 Appel d'offres national / PON 01 puis transition vers PON\n international 03 (appel d'offres ouvert)\n\n4.4 Établissement du Bon de Commande (Achat Direct)\nPour les acquisitions inférieures à 10 000 000 FCFA relevant de l'achat direct, la procédure se poursuit comme\nsuit :\n  Le SPM sollicite au minimum un (1) devis (recommandé : deux devis pour les montants supérieurs à\n 5 000 000 FCFA) auprès d'un fournisseur figurant au Répertoire de Fournisseurs Qualifiés (voir PON\n 02)\n  Le SPM établit le Bon de Commande (BC — Annexe 1.C) reprenant les conditions convenues\n (désignation, quantité, prix, délai de livraison, lieu de livraison)\n  Le BC est signé par le Chef du SPM et visé par l'Agence Comptable (engagement budgétaire)\n  Le BC est signé par le Directeur Général pour les montants supérieurs à 2 000 000 FCFA, ou par\n délégation pour les montants"}, {"num": 13, "title": "ACHATS D'URGENCE", "content": "CHAPITRE 13 — ACHATS D'URGENCE\n PROCÉDURES D'URGENCE — Ce chapitre définit des dérogations exceptionnelles aux procédures normales, y\n compris pour les produits de santé. Ces dérogations sont soumises à une documentation renforcée et à un contrôle a\n posteriori obligatoire.\n13.1 Définition des Situations d'Urgence\n  Épidémies ou menaces sanitaires déclarées nécessitant une riposte immédiate\n  Rupture critique de stock de réactifs ou consommables essentiels menaçant l'arrêt des analyses\n nationales de référence\n  Indisponibilité prouvée du produit au catalogue des fournisseurs préqualifiés avec impact opérationnel\n immédiat\n  Panne ou défaillance majeure d'équipements de laboratoire ou de chaîne du froid\n  Catastrophe naturelle ou force majeure affectant les opérations de l'INSAPT\n  Activation du COUSP nécessitant des acquisitions immédiates pour la riposte\n13.2 Seuils d'Autorisation en Urgence\n MONTANT AUTORITÉ HABILITÉE DOCUMENTATION REQUISE\n< 5 000 000 FCFA Directeur Général (ou SG par Mémo d'urgence + bon de commande + au moins 1\n délégation écrite) devis + notification au SPM si produit de santé\n5 000 000 à 30 000 000 Directeur Général + Agence Déclaration d'urgence + 2 devis si délai le permet +\n FCFA Comptable BRC + notification au SPM si applicable\n> 30 000 000 FCFA Directeur Général + notification Dossier complet + rapport d'urgence + validation\n immédiate au Président du CA CA a posteriori + notification à l'ARMP\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 14, "title": "RÉACTIFS DE LABORATOIRE & GESTION", "content": "CHAPITRE 14 — RÉACTIFS DE LABORATOIRE & GESTION\n DES STOCKS\n PRODUITS DE SANTÉ : Ce chapitre s'applique spécifiquement au LNSP de l'INSAPT. Les réactifs, kits de\n diagnostic et consommables biologiques sont acquis directement par la CPM sur la base des besoins\n exprimés par le LNSP (Chapitre 3).\n14.1 Approvisionnement du LNSP en Réactifs\nLe LNSP de l'INSAPT est le principal consommateur de réactifs de l'Institut. Son approvisionnement\ns'effectue prioritairement via la CPM, conformément aux dispositions du Chapitre 3. Les procédures du\nprésent chapitre encadrent la gestion interne des stocks, la planification des besoins à soumettre au SPM, et\nles procédures de réception et de contrôle qualité à l'arrivée des livraisons.\n14.2 Planification Annuelle des Besoins en Réactifs (à soumettre au SPM)\nLe Directeur du LNSP prépare, avant le 30 octobre de chaque année, une prévision consolidée des besoins\nannuels en réactifs, fondée sur la méthodologie de prévision basée sur la consommation (Cadre Annuel de\nPlanification des Marchés, Livrable 3). Cette prévision est transmise simultanément :\n  À la CPM, via le formulaire de planification annuelle de la CPM, pour inscription dans son plan\n d'approvisionnement\n  Au SPM de l'INSAPT, pour intégration dans le PPM institutionnel (produits de santé)\n  À l'Agence Comptable, pour certification de la disponibilité budgétaire prévisionnelle\n14.3 Niveaux de Stock et Points de Commande\n STOCK STOCK POINT DE DÉLAI DE LIVRAISON\n CATÉGORIE DE RÉACTIF\n MIN. MAX. RÉORDER FOURNISSEUR ESTIMÉ\nRéactifs diagnostic épidémique 3 mois 12 mois 4 mois Cible ≤ 4 sem.\n (VHF, choléra, méningite)\nMilieux de culture microbiologie 2 mois 6 mois 3 mois Cible ≤ 3 sem.\nRéactifs de biologie moléculaire 2 mois 6 mois 3 mois Cible ≤ 4 sem.\n (PCR)\nConsommables courants 1 mois 4 mois 6 semaines Cible ≤ 2 sem.\n biologiques\nRéactifs chimiques / toxicologie 2 mois 6 mois 3 mois Cible ≤ 3 sem.\nNote : Les délais de livraison seront formellement établis avec chaque fournisseur attributaire lors de la contractualisation.\n14.4 Réception des Produits de Santé au LNSP\n  À chaque livraison du fournisseur, le Gestionnaire de Stock LNSP et le Responsable Qualité LNSP\n procèdent à une inspection complète selon la Fiche de Contrôle de la Chaîne du Froid (Annexe 5.E)\n  Tout écart (quantité, qualité, chaîne du froid, date de péremption) est documenté dans le PVIR\n (Annexe 5.B) et notifié formellement au SPM dans les 48 heures\n  En cas de produit non-conforme, l'INSAPT met le lot en quarantaine dans l'attente de la décision du\n Responsable Qualité LNSP, en lien avec le fournisseur, avant toute utilisation ou destruction\n  Le SPM est informé de tout incident de chaîne du froid détecté à la réception\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f14.5 Principe PPSO / FEFO\nL'INSAPT applique le principe PPSO (Premier Périmé, Sorti en Premier — FEFO) pour tous les réactifs et\nconsommables, qu'ils proviennent de la CPM ou d'une source directe autorisée. Ce principe est suivi via la\nFiche d'Inventaire FEFO/PPSO (Annexe 5.D).\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 15, "title": "PROCÉDURES OPÉRATIONNELLES", "content": "CHAPITRE 15 — PROCÉDURES OPÉRATIONNELLES\n STANDARDISÉES : RÉACTIFS DE LABORATOIRE (SOP R-1 À\n R-4)\n NOTE PRÉLIMINAIRE — PASSATION DIRECTE DES PRODUITS DE SANTÉ\n DISPOSITION APPLICABLE — En vertu de la dérogation gouvernementale décrite au Chapitre 3, l'INSAPT\n et son Laboratoire National de Santé Publique (LNSP) conduisent directement, via la CPM, l'ensemble de\n leurs achats de réactifs, kits de diagnostic, milieux de culture, contrôles, calibrateurs et consommables\n biologiques, selon le Code des Marchés Publics et sous le contrôle de l'ARMP.\n\n1. Implications sur les présentes SOP\nLes présentes Procédures Opérationnelles Normalisées (SOP R-1 à R-4) régissent les processus internes à\nl'INSAPT/LNSP relatifs à : la définition des besoins et des spécifications techniques, la planification des\napprovisionnements, la gestion de la réception (contrôle qualité, chaîne du froid), la gestion des stocks\n(PPSO/FEFO), et la distribution aux sites partenaires. Elles ne substituent pas les procédures de la CPM, mais\ns'y articulent et s'y conforment.\n\n2. Architecture d'Approvisionnement à Deux Niveaux\n NIVEAU ACTEUR RESPONSABILITÉ\n1 — Passation des Centrale Pharmaceutique d'Achat Préqualification fournisseurs, appel\n marchés (CPA) d'offres, attribution, contractualisation,\n acheminement vers l'INSAPT/LNSP\n conformément à ses propres procédures\n et au CMP\n2 — Gestion interne INSAPT / LNSP (+ Service Passation Définition des besoins, spécifications\n des Marchés) techniques, planification PPM, réception,\n chaîne du froid, stocks (PPSO/FEFO),\n distribution aux sites partenaires — régi\n par les présentes SOP\nRéférence légale principale : CMP Décret N°002130/PR/2020, Article 8 (al. 2) — En cas de conflit entre le\n présent Code et les obligations souscrites par l'État Tchadien dans le cadre d'un accord, traité ou convention\n avec une institution internationale ou intergouvernementale de financement, les dispositions du traité ou de\n l'accord prévalent sur les dispositions contraires du Code (clause PTF). Les dispositions non contraires\n demeurent applicables.\n Référence : Article 4 du CMP — Le présent Code s'applique notamment aux établissements publics de l'État\n (INSAPT en tant qu'établissement public). Le Directeur Général est l'organe administratif compétent pour la\n passation des marchés (Art. 28).\n\n3. Interface LNSP ↔ SPM : Processus de Demande\n 1. Le LNSP, via son Gestionnaire de Stock et le Directeur du LNSP, établit une Expression de Besoins\n annuelle consolidée (intégrée au Plan de Passation des Marchés — PPM — conformément à l'Art. 71\n du CMP) et la soumet au SPM dans les délais définis par la CPM pour l'exercice budgétaire concerné\n 2. Pour les besoins non planifiés ou urgents survenant en cours d'exercice, le LNSP soumet une\n demande d'approvisionnement urgente au SPM en précisant la criticité, le volume et les spécifications\n techniques (voir SOP R-1, Section 4.3)\n 3. La CPM engage la procédure de mise en concurrence appropriée selon les seuils du CMP (Art. 9 à\n 12) et ses propres procédures de préqualification\n 4. À la livraison, l'INSAPT/LNSP applique les procédures de réception décrites dans les SOP R-2\n (chaîne du froid) et les formulaires R-2.A, R-2.B, R-4.B et R-4.C, indépendamment de la procédure\n d'acquisition menée par la CPM\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fLes SOP R-1 à R-4 s'appliquent à la gestion interne des réactifs par l'INSAPT/LNSP. Toute procédure de\n commande, de contractualisation ou de sélection de fournisseur relève de la CPM, selon les procédures standard\n décrites au Chapitre 12.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fSOP R-1 — EXPRESSION DES BESOINS & PASSATION DIRECTE\n\n1. Objet\nLa présente Procédure Opérationnelle Normalisée décrit le processus interne à l'INSAPT/LNSP relatif à : (a)\nl'identification et la planification des besoins en réactifs, milieux de culture, kits de diagnostic, contrôles et\ncalibrateurs ; (b) l'élaboration des spécifications techniques ; (c) la coordination avec la Centrale\nPharmaceutique d'Achat (CPA) pour les demandes d'approvisionnement ordinaires et d'urgence. Elle précise\nles responsabilités et documents requis à chaque étape, dans le respect du mandat exclusif de la CPM pour la\npassation des marchés de produits de santé dans le secteur public tchadien.\n\n2. Champ d'Application\nCette procédure s'applique à tous les réactifs, milieux de culture, kits de diagnostic, contrôles, calibrateurs et\nconsommables biologiques du LNSP, couvrant les unités : Entomologie/Parasitologie, Bactériologie/Virologie,\nBiologie moléculaire et génomique, Environnement/Toxicologie.\n Références légales : Loi N°011/PR/2020, Art. 3 (mission INSAPT) ; CMP Décret N°002130/PR/2020, Art. 4\n (champ d'application — établissements publics), Art. 8 (primauté des accords PTF), Art. 9-13 (seuils de la\n commande publique et procédures), Art. 14-15 (interdiction de fractionnement), Art. 18 (préalables à la\n commande publique), Art. 71 (Plan de Passation des Marchés — PPM) ; Manuel de Politiques INSAPT, Chapitre\n 11.\n\n3. Rôles & Responsabilités\n RÔLE RESPONSABILITÉ\nDirecteur du LNSP Valide les spécifications et l'Expression de Besoins annuelle ; approuve les\n demandes d'urgence\nRéférent Qualité / LaBiep Co-valide les spécifications tech"}, {"num": 16, "title": "ÉTHIQUE & ANTI-CORRUPTION", "content": "CHAPITRE 16 — ÉTHIQUE & ANTI-CORRUPTION\n 16.1 Principes Fondamentaux\nL'INSAPT adhère à une politique de tolérance zéro envers toute forme de corruption, de fraude, de collusion\nou de pratique anticoncurrentielle dans ses processus d'acquisition — qu'il s'agisse de marchés directs ou de\ncommandes transmises au SPM.\n16.2 Comportements Interdits\n  Sollicitation ou acceptation d'avantages, cadeaux ou commissions liés à un marché ou à une\n commande de produits de santé\n  Divulgation d'informations confidentielles à des soumissionnaires potentiels\n  Fractionnement artificiel de marchés pour contourner les seuils de l'AO\n  Participation à l'évaluation d'un marché dans lequel on a un intérêt déclaré ou non déclaré\n  Pression sur les membres de la CPM\n  Falsification de documents, de devis, de procès-verbaux ou de fiches de contrôle qualité\n  Contournement délibéré des seuils de mise en concurrence sans dérogation formelle approuvée\n16.3 Mécanisme de Signalement\n FONDEMENT LÉGAL : Conformément à l'Article 60(k) du Décret N°002130/PR/2020, l'ARMP peut recevoir les\n recours des candidats et soumissionnaires ou s'autosaisir des violations de la réglementation des marchés publics.\n Conformément à l'Article 69(2), tout membre d'une Commission de Passation des Marchés en situation de conflit\n d'intérêt doit le signaler par écrit à l'ARMP, sous peine des sanctions prévues par la réglementation en vigueur. Les\n signalements peuvent également être adressés à l'Auditeur Interne de l'INSAPT, au Directeur Général, ou aux PTF\n concernés. Tout signalement de bonne foi est protégé.\n16.4 Mécanisme de Recours et Règlement des Différends\nConformément au Titre VI, Chapitre 1 du Décret N°002130/PR/2020, tout candidat ou\nsoumissionnaire qui s'estime lésé par une décision ou un manquement de l'INSAPT au cours d'une\nprocédure de passation des marchés dispose d'un droit de recours, exercé selon un mécanisme à\ndeux niveaux. La présente section décrit ce mécanisme afin de garantir sa pleine application au sein\nde l'INSAPT, conformément à la mission de régulation des différends confiée à l'ARMP (armp-\ntchad.com/missions).\n\n16.4.1 Premier Niveau — Recours Hiérarchique auprès du Maître d'Ouvrage\nLe Code distingue quatre fenêtres de recours successives, chacune ouverte à un stade précis de la\nprocédure :\n  Entre la publication de l'avis d'appel d'offres et l'ouverture des plis — recours sur le contenu du\n Dossier d'Appel d'Offres (DAO) ou les conditions de participation\n  À l'ouverture des plis — recours sur la régularité de la séance d'ouverture\n  Entre la publication des résultats et la notification de l'attribution — recours sur les critères\n d'évaluation appliqués\n  Après la publication des résultats d'attribution — recours du soumissionnaire non retenu\nÀ chacune de ces étapes, le candidat ou soumissionnaire adresse d'abord son recours par écrit au\nMaître d'Ouvrage (Directeur Général de l'INSAPT), qui dispose d'un délai à préciser dans le Dossier\nd'Appel d'Offres pour répondre. Le Service Passation des Marchés (SPM) instruit le dossier et\nprépare la réponse motivée du Directeur Général.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f\n16.4.2 Second Niveau — Comité de Règlement des Différends de l'ARMP\nSi le désaccord persiste après la réponse du Directeur Général, ou en l'absence de réponse dans le\ndélai imparti, le candidat ou soumissionnaire peut saisir le Comité de Règlement des Différends\ninstitué auprès de l'Autorité de Régulation des Marchés Publics (ARMP), conformément aux Articles\n60(k) et au Titre VI du Décret N°002130/PR/2020. Ce recours est suspensif de la procédure de\npassation du marché en cours. L'ARMP statue sur le litige et peut prononcer les sanctions prévues\npar le Code, y compris l'annulation d'une attribution effectuée en violation de la réglementation ou en\nmarge des règles de transparence et d'équité (Article 61 du CMP).\nCoordonnées de l'ARMP : Autorité de Régulation des Marchés Publics, N'Djaména, Tchad —\ncontact@armp-tchad.com — +235 66 29 68 05 — armp-tchad.com.\nFONDEMENT LÉGAL : Le mécanisme de recours décrit ci-dessus s'applique exclusivement aux marchés relevant de\n la procédure de passation directe de l'INSAPT (). Les commandes de réactifs et produits de santé suivent le même\n mécanisme de recours, la CPM étant responsable de leur passation conformément au Chapitre 3 du présent Manuel.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 17, "title": "SUIVI, KPIS & REPORTING", "content": "CHAPITRE 17 — SUIVI, KPIS & REPORTING\n 17.1 Indicateurs Clés de Performance (KPIs)\n RESPONS\n # INDICATEUR CIBLE FRÉQUENCE SOURCE DOMAINE\n ABLE\n1 % du PPM exécuté dans les > 80 % Trim. PPM vs réel SPM Général\n délais prévus\n2 Délai moyen de traitement d'un ≤ délai CMP Mens. Dossiers SPM Général\n marché direct marchés\n3 % des commandes produits ≥ 95 % Trim. Registre des SPM CPA\n santé transitant par la CPM Dérogations\n4 Nombre de dérogations hors < 3/an Annuel Registre dérog. SPM CPA\n urgences déclarées\n5 Montant des achats d'urgence / < 10 % Trim. Registre SPM Général\n total des achats urgences\n6 Taux de marchés en AO ouvert > 85 % AO Semes. Registre SPM Général\n vs gré à gré marchés\n7 Taux d'exécution budgétaire > 90 % Semes. Comptabilité Agence Cpt. Finance\n acquisition\n8 Taux de réactifs périmés / stock <3% Mens. Inventaire LNSP Produits de\n total LNSP LNSP Santé/Stock\n9 Incidents qualité produits de 100 % Chaque Fiche incident Gest. Stock CPA\n santé notifiés dans les 48h incident\n1 Score moyen évaluation des > 75 % Annuel Fiches éval. SPM Fournisseur\n 0 fournisseurs directs s\n17.2 Archivage\nL'ensemble des dossiers de marchés — y compris les commandes de produits de santé, les notifications\nd'incidents et les dérogations — est archivé par le SPM pendant une durée minimale de dix (10) ans après la\nclôture du marché ou de la commande, sous format papier et numérique.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fINSAPT — Manuel de Passation des Marchés | Corps du Manuel Version 1 — Juillet 2026"}, {"num": 18, "title": "CADRE DE COORDINATION AVEC LES", "content": "CHAPITRE 18 — CADRE DE COORDINATION AVEC LES\nPARTENAIRES TECHNIQUES ET FINANCIERS (PTF)\n\n18.1 Principe de Superposition des Règles\nL'INSAPT reçoit un financement combiné : budget de l'État tchadien, ressources propres, et appuis de\nPartenaires Techniques et Financiers (PTF) internationaux — notamment l'OMS, l'Union Européenne,\nl'AFD, le Fonds Pandémique (The Pandemic Fund), Africa CDC et la Banque Mondiale. Le principe\ndirecteur est celui de la superposition des règles : le droit tchadien (Code des Marchés Publics, Décret\nN°002130/PR/2020) demeure le socle juridique de toute acquisition réalisée sur le territoire tchadien par\nl'INSAPT en tant qu'Autorité Contractante ; les règles du PTF s'appliquent en complément, et prévalent\nsur les dispositions nationales uniquement dans la mesure expressément prévue par l'accord de\nfinancement, conformément au Décret N°0022/PR/PM/SGG/2024 portant règles dérogatoires spécifiques\naux marchés publics sur financement extérieur.\n  Lorsqu'un accord de financement PTF est muet sur un point, le Code des Marchés Publics du\n Tchad s'applique par défaut.\n  Lorsqu'un accord de financement PTF prévoit une règle dérogatoire (méthode de sélection, seuil,\n non-objection, liste de fournisseurs inéligibles), cette règle prévaut pour les marchés financés par\n ce PTF, et doit être documentée dans le dossier de marché.\n  En cas de cofinancement (État + PTF, ou plusieurs PTF), la CPM applique la règle la plus stricte\n entre les bailleurs, sauf accord de cofinancement contraire signé par toutes les parties.\n  Le Décret N°0022/PR/PM/SGG/2024 dispense les marchés financés à 100% par dons extérieurs de\n certaines règles de droit commun du Code des Marchés Publics, sous réserve du respect des\n seuils d'approbation qu'il fixe (Maître d'Ouvrage jusqu'à 100 000 000 FCFA ; Ministre chargé du\n Plan au-delà) et de la revue préalable du bailleur ou de la DGCMP selon le cas (Art. 2 et 3 du\n Décret).\n\n18.2 Tableau Comparatif des Principaux PTF\n PTF Cadre de référence Méthodes / seuils clés Points de vigilance Contact/\n Référence\n OMS WHO Procurement Sélection par mise en Pré-qualification des who.int/\n Policy — appels concurrence obligatoire ; fournisseurs distincte about/\n d'offres (ITB) et principe de \"best value for du RFQ national ; accountability/\n demandes de money\" (combinaison exigences procurement\n propositions (RFP) ; qualité-prix, non le prix d'assurance qualité\n comité d'examen des seul) pour produits de\n contrats (CRC) pour santé\n les marchés à forte\n valeur\n Union PRAG — Seuils : ≥ 300 000 € appel Non-objection ec.europa.eu\n Européenne Procurement and d'offres international systématique de la — PRAG\n Grants for EU restreint ; 20 000–300 Délégation UE avant\n external actions 000 € procédure lancement et avant\n (guide pratique) négociée concurrentielle ; attribution ; règles de\n ≤ 20 000 € marché à bon nationalité/origine ;\n de commande unique Early Warning\n System (exclusion)\n AFD Guidelines for Aide entièrement déliée Déclaration afd.fr/fr/\n Procurement of AFD- depuis 2002 (aucune d'Intégrité, ressources\n Financed Contracts restriction de nationalité, d'Éligibilité et de\n in Foreign Countries hors embargo Responsabilité E&S\n (dernière version en international) ; marge de obligatoire dans\n vigueur) préférence nationale chaque DAO ; revue\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \fplafonnée à 15% biens / a priori ou a\n 7,5% travaux posteriori selon\n capacité de\n l'emprunteur\n The Pandemic Opérations via L'INSAPT ne reçoit pas Vérifier thepandemicfu\n Fund Entités de Mise en de fonds directement ; les systématiquement nd.org\n Œuvre (IE) règles de passation QUELLE IE gère le\n accréditées (Banque applicables sont celles de financement — les\n Mondiale, OMS, l'IE accréditée désignée règles procédurales\n UNICEF, BAD, etc.) dans l'accord de projet en découlent\n entièrement ;\n contrôles fiduciaires\n stricts et audits\n réguliers\n Africa CDC Mécanisme Africain Agrégation de la Complémentaire à la africacdc.org/\n d'Achats Groupés demande de plusieurs procédure nationale appm\n (African Pooled États membres UA pour de passation ;\n Procurement produits de santé l'INSAPT participe\n Mechanism — prioritaires ; accords- via le point focal KA-\n APPM), lancé 2024 cadres non exclusifs avec GHLP et coordonne\n fournisseurs multiples avec Africa CDC\n pour éviter les\n doublons de\n commande\n Banque Cadre de Passation Jusqu'à 71 Non-objection worldbank.org\n Mondiale des Marchés (2016) méthodes/approches de obligatoire à 3 — STEP\n — Règlement de marché possibles ; seuils étapes clés (dossier,\n Passation des de revue préalable (\"prior évaluation,\n Marchés pour les review\") fixés par projet attribution) si le\n Emprunteurs FPI selon le niveau de risque, marché est en revue\n via la plateforme STEP préalable ; sanctions\n et liste d'exclusion\n de la Banque à\n vérifier\n\n18.3 Règles de Non-Objection et de Revue Préalable\nPour tout marché cofinancé ou entièrement financé par un PTF appliquant un mécanisme de revue\npréalable (Banque Mondiale, UE, AFD selon seuils), le SPM soumet les documents suivants à la non-\nobjection du bailleur avant de poursuivre à l'étape suivante :\n  Le Dossier d'Appel d'Offres (DAO) ou la demande de propositions, avant publication\n  Le rapport d'évaluation des offres/propositions et la recommandation d'attribution, avant notification\n au soumissionnaire retenu\n  Le projet"}, {"num": 19, "title": "BIBLIOTHÈQUE DE CLAUSES CONTRACTUELLES", "content": "CHAPITRE 19 — BIBLIOTHÈQUE DE CLAUSES CONTRACTUELLES\nTYPES\nLes clauses ci-dessous constituent le socle minimal à intégrer dans tout contrat de l'INSAPT, en\ncomplément du Cahier des Clauses Administratives Générales (CCAG) prévu par le Code des Marchés\nPublics. Leur formulation s'inspire des meilleures pratiques internationales adaptées au contexte juridique\ntchadien.\n\n19.1 Clauses Générales d'Exécution\n  Objet et périmètre du contrat — description précise des biens/services/travaux, références au\n CCTP\n  Prix et modalités de paiement — prix ferme ou révisable, devise, échéancier, pénalités de retard de\n paiement (Titre IV, Chapitre 3, Section 5 du Code des Marchés Publics)\n  Délai d'exécution et pénalités de retard — taux journalier de pénalité plafonné, mise en demeure\n préalable\n  Garanties — garantie de soumission, garantie de bonne exécution, garantie de restitution d'avance\n (Chapitre 8.5 du Manuel)\n  Réception et inspection — renvoi au PVIR (Annexe 5.B) et, pour les produits de santé, aux\n dispositions particulières du Chapitre 3\n  Cession et sous-traitance — interdiction de cession sans accord écrit préalable de l'INSAPT ;\n obligation de déclaration des bénéficiaires effectifs du sous-traitant (Décret\n N°0104/PT/PM/SGG/2022)\n\n19.2 Clause Anti-Corruption et Intégrité\nLe titulaire certifie qu'il n'a pas offert, donné ou promis d'avantage indu à un agent de l'INSAPT ou à tout\ntiers en vue d'obtenir ou de conserver le marché. Toute violation constatée entraîne la résiliation immédiate\ndu contrat aux torts exclusifs du titulaire, sans préjudice des poursuites judiciaires prévues aux articles\n214 et suivants du Code des Marchés Publics et à l'article 217(g) du Code Pénal, ainsi que, pour les\nmarchés à financement PTF, l'application des sanctions propres au bailleur (Chapitre 18.6) et la\ntransmission du dossier à l'ARMP.\n\n19.3 Clause de Conflit d'Intérêts\nLe titulaire déclare l'absence de tout lien familial, capitalistique ou hiérarchique avec un membre de la\nCPM, de l'Agence Comptable, ou de la Direction Générale de l'INSAPT impliqué dans l'attribution du\nmarché. Toute situation de conflit d'intérêts survenant en cours d'exécution doit être déclarée sans délai\npar écrit.\n\n19.4 Confidentialité et Propriété Intellectuelle\n  Confidentialité des informations sanitaires, épidémiologiques et de laboratoire échangées dans le\n cadre du contrat, y compris après son terme\n  Propriété des livrables et données générées dans le cadre du marché — transfert à l'INSAPT sauf\n stipulation contraire de l'accord de financement PTF\n  Protection des données à caractère personnel conformément à la réglementation tchadienne\n applicable\n\n19.5 Force Majeure\nAucune partie n'est tenue responsable d'un manquement résultant d'un événement de force majeure\n(catastrophe naturelle, épidémie déclarée, conflit armé, décision gouvernementale imprévisible)\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f\néchappant à son contrôle raisonnable. La partie affectée notifie l'autre partie par écrit dans un délai de\nsept (7) jours et propose un plan de reprise ou de résiliation à l'amiable.\n\n19.6 Résiliation\n  Résiliation pour faute — manquement grave non corrigé dans un délai de mise en demeure de\n quinze (15) jours\n  Résiliation pour convenance de l'INSAPT — moyennant préavis écrit et indemnisation des\n prestations dûment exécutées\n  Résiliation de plein droit en cas de fausse déclaration sur les bénéficiaires effectifs (Décret\n N°0104/PT/PM/SGG/2022) ou de découverte d'une fraude/corruption\n\n19.7 Règlement des Différends\nTout différend fait d'abord l'objet d'une tentative de règlement amiable entre les parties dans un délai de\ntrente (30) jours. À défaut, il est porté devant les juridictions compétentes du Tchad, sauf clause d'arbitrage\nspécifique convenue pour les marchés à financement international, et sans préjudice des voies de recours\nprévues au Chapitre 16.4 du Manuel (recours ARMP).\n\n19.8 Audit et Droit d'Accès\nLe titulaire s'engage à conserver les pièces justificatives du marché pendant dix (10) ans et à donner\naccès, sur demande, à l'Audit Interne de l'INSAPT, à la Cour des Comptes, à l'ARMP, ainsi qu'aux\nauditeurs mandatés par tout PTF cofinançant le marché.\n\n19.9 Assurance et Responsabilité\nPour les marchés de travaux et les prestations impliquant du personnel sur site, le titulaire souscrit une\npolice d'assurance responsabilité civile et accidents du travail dont la preuve est produite avant le\ndémarrage de l'exécution.\n\nInstitut National de Santé Publique du Tchad (INSAPT) | N'Djamena \f\nANNEXE N\nRegistre des Dérogations d'Urgence\n\nSECTION 1 — BON DE COMMANDE PRODUITS DE SANTÉ\n N° de référence INSAPT de la\n commande :\nDate de la commande :\nDirection / Unité demandeuse :\nResponsable technique :\nN° du Bon de Réservation de Crédits\n (BRC) :\nExercice budgétaire / Ligne\n budgétaire :\nSource de financement (État / PTF /\n Ressources propres) :\nPTF concerné (le cas échéant) :\n\nSECTION 2 — DÉTAIL DES PRODUITS COMMANDÉS\n SPÉCIFICATION\n DÉNOMINATION COMMUNE / DATE DE FSR\n # QTÉ UNITÉ\n DU PRODUIT CONDITIONNE BESOIN ?\n MENT\n\nFSR ? = Formulaire de Spécifications de Réactifs (Annexe R-1.A) joint à la commande | ☐ Oui ☐ Non ☐ N/A\n\nSECTION 3 — FICHE DE SUIVI DE LA COMMANDE\n RÉFÉRENCE OBSERVATION\n ÉVÉNEMENT DATE PR"}];
+
+// ── STATE ──
+let currentManual = 'cpa';
+let currentChapter = 0;
+let currentTab = 'content';
+let searchTimer = null;
+let comments = JSON.parse(localStorage.getItem('insaptComments') || '{}');
+
+// ── BACKEND CONFIG ──
+// After deploying INSAPT_Manual_Backend.gs, paste your Web App URL below.
+// Until then, comments are saved locally in the browser.
+const BACKEND_URL = 'https://script.google.com/macros/s/AKfycbz_aaDel8T70Xy3dLYx72xx0R-pHEccrh3v5zUT2K5k_NE8SGhvirwNHU6-l5sqVUf2/exec';
+
+function chapters() {
+  return currentManual === 'cpa' ? CPA_CHAPTERS : NOCPA_CHAPTERS;
+}
+
+// ── LANDING ──
+function openManual(version) {
+  currentManual = version;
+  currentChapter = 0;
+  document.getElementById('landing').style.display = 'none';
+  document.getElementById('app').style.display = 'flex';
+  document.getElementById('versionTag').textContent =
+    version === 'cpa' ? 'Version A — Circuit CPA' : 'Version B — Passation Directe CPM';
+  buildToc();
+  showChapter(0);
+}
+
+function goHome() {
+  document.getElementById('landing').style.display = 'flex';
+  document.getElementById('app').style.display = 'none';
+  document.getElementById('searchInput').value = '';
+}
+
+function switchVersion() {
+  const wasChapter = currentChapter;
+  openManual(currentManual === 'cpa' ? 'nocpa' : 'cpa');
+  showChapter(Math.min(wasChapter, chapters().length - 1));
+}
+
+// ── TOC ──
+function buildToc() {
+  const list = document.getElementById('tocList');
+  list.innerHTML = chapters().map((c, i) => `
+    <div class="toc-item" id="toc${i}" onclick="showChapter(${i})">
+      <div class="ch-num">${c.num}</div>
+      <div class="ch-title">${c.title}</div>
+    </div>`).join('');
+}
+
+function updateProgress() {
+  const pct = ((currentChapter + 1) / chapters().length) * 100;
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// ── CHAPTER VIEW ──
+function showChapter(idx) {
+  currentChapter = idx;
+  const ch = chapters()[idx];
+  currentTab = 'content';
+
+  document.getElementById('searchResults').style.display = 'none';
+  document.getElementById('chapterView').style.display = 'flex';
+  document.getElementById('chapterView').style.flexDirection = 'column';
+
+  document.getElementById('chKicker').textContent = `CHAPITRE ${ch.num}`;
+  document.getElementById('chTitle').textContent = ch.title;
+  document.getElementById('chMeta').textContent =
+    `Manuel INSAPT ${currentManual === 'cpa' ? '— Version Circuit CPA' : '— Version Passation Directe CPM'}  ·  Juillet 2026`;
+
+  // Format content
+  const formatted = formatContent(ch.content);
+  document.getElementById('chBody').innerHTML = formatted;
+
+  showTab('content');
+  renderComments(idx);
+
+  // Update TOC highlighting
+  document.querySelectorAll('.toc-item').forEach((el, i) => {
+    el.classList.toggle('active', i === idx);
+  });
+  const tocEl = document.getElementById('toc' + idx);
+  if (tocEl) tocEl.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+
+  document.getElementById('btnPrev').disabled = idx === 0;
+  document.getElementById('btnNext').disabled = idx === chapters().length - 1;
+
+  updateProgress();
+  document.getElementById('content').scrollTo(0, 0);
+  document.getElementById('searchInput').value = '';
+}
+
+function formatContent(text) {
+  // Convert plain text to readable HTML
+  let lines = text.split('\n');
+  let html = '';
+  for (let line of lines) {
+    line = line.trim();
+    if (!line) { html += '<br>'; continue; }
+    // Section headings: e.g. "1.1 Something" or "SOP R-2 —"
+    if (/^(\d+\.\d+|SOP\s+R?-?\d+|ANNEXE\s+[A-Z])\s/.test(line)) {
+      html += `<h3>${esc(line)}</h3>`;
+    } else if (line.startsWith('•') || line.startsWith('-') || line.startsWith('–')) {
+      html += `<p style="padding-left:18px; margin:4px 0">${esc(line)}</p>`;
+    } else if (line.length < 80 && line === line.toUpperCase() && line.length > 5) {
+      html += `<p style="font-weight:bold;margin:16px 0 6px">${esc(line)}</p>`;
+    } else {
+      html += `<p style="margin:6px 0">${esc(line)}</p>`;
+    }
+  }
+  return html;
+}
+
+function navChapter(dir) {
+  const next = currentChapter + dir;
+  if (next >= 0 && next < chapters().length) showChapter(next);
+}
+
+function showTab(tab) {
+  currentTab = tab;
+  document.getElementById('tabContent').style.display = tab === 'content' ? 'flex' : 'none';
+  document.getElementById('tabContent').style.flexDirection = tab === 'content' ? 'column' : 'none';
+  document.getElementById('tabComments').style.display = tab === 'comments' ? 'block' : 'none';
+  document.querySelectorAll('.cnav-tab').forEach((el, i) => {
+    el.classList.toggle('active', (i === 0 && tab === 'content') || (i === 1 && tab === 'comments'));
+  });
+}
+
+// ── COMMENTS ──
+function submitComment() {
+  const name = document.getElementById('cfName').value.trim();
+  const service = document.getElementById('cfService').value.trim();
+  const email = document.getElementById('cfEmail').value.trim();
+  const type = document.getElementById('cfType').value;
+  const comment = document.getElementById('cfComment').value.trim();
+  const reason = document.getElementById('cfReason').value.trim();
+  const ch = chapters()[currentChapter];
+
+  if (!name || !comment) {
+    alert('Veuillez indiquer votre nom et votre commentaire.');
+    return;
+  }
+
+  const submitBtn = document.querySelector('.cf-submit');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Envoi en cours...';
+
+  const payload = {
+    action: 'submit',
+    manual: currentManual,
+    chapterNum: ch.num,
+    chapterTitle: ch.title,
+    name, service, email, type, comment, reason
+  };
+
+  // Save locally first (always works)
+  const key = `${currentManual}_${currentChapter}`;
+  if (!comments[key]) comments[key] = [];
+  const localEntry = {
+    name, service, type, comment, reason,
+    date: new Date().toLocaleDateString('fr-FR', { day:'2-digit', month:'long', year:'numeric' }),
+    chapter: ch.title, status: 'local'
+  };
+  comments[key].push(localEntry);
+  localStorage.setItem('insaptComments', JSON.stringify(comments));
+
+  // Also post to backend if configured
+  if (BACKEND_URL) {
+    fetch(BACKEND_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      mode: 'no-cors',
+      body: JSON.stringify(payload)
+    }).then(() => {
+      localEntry.status = 'submitted';
+      localStorage.setItem('insaptComments', JSON.stringify(comments));
+    }).catch(() => {
+      // Silently keep local — shown with "(local)" tag
+    });
+  }
+
+  document.getElementById('cfName').value = '';
+  document.getElementById('cfService').value = '';
+  document.getElementById('cfEmail').value = '';
+  document.getElementById('cfComment').value = '';
+  document.getElementById('cfReason').value = '';
+  submitBtn.disabled = false;
+  submitBtn.textContent = 'Soumettre ma contribution';
+
+  renderComments(currentChapter);
+  showToast();
+}
+
+function renderComments(idx) {
+  const key = `${currentManual}_${idx}`;
+  const list = document.getElementById('commentList');
+  const items = comments[key] || [];
+
+  const countEl = document.querySelector('.cnav-tab:nth-child(2)');
+  if (countEl) countEl.textContent = `💬 Commentaires & Suggestions${items.length > 0 ? ` (${items.length})` : ''}`;
+
+  if (items.length === 0) {
+    list.innerHTML = '<p style="color:var(--gray);font-size:13px;padding:12px 0">Aucun commentaire pour ce chapitre. Soyez le premier à contribuer !</p>';
+    return;
+  }
+  list.innerHTML = [...items].reverse().map(c => `
+    <div class="comment-card">
+      <div class="cmeta">
+        <strong>${esc(c.name)}</strong>${c.service ? ' · ' + esc(c.service) : ''} · ${c.date}
+        <span class="ctype ctype-${c.type}">${c.type === 'suggestion' ? '💡 Suggestion' : c.type === 'question' ? '❓ Question' : '⚠️ Préoccupation'}</span>
+        ${c.status === 'submitted' ? '<span style="color:#2E7D32;font-size:10px;margin-left:6px">✓ Transmis à l\'admin</span>' : '<span style="color:#888;font-size:10px;margin-left:6px">Enregistré localement</span>'}
+      </div>
+      <div class="ctext">${esc(c.comment)}</div>
+      ${c.reason ? `<div class="creason">Justification : ${esc(c.reason)}</div>` : ''}
+      ${c.email ? `<div style="font-size:11px;color:#8A99B3;margin-top:4px">Contact : ${esc(c.email)}</div>` : ''}
+    </div>`).join('');
+}
+
+// ── SEARCH ──
+function onSearch(query) {
+  clearTimeout(searchTimer);
+  if (!query.trim()) {
+    document.getElementById('searchResults').style.display = 'none';
+    document.getElementById('chapterView').style.display = 'flex';
+    return;
+  }
+  searchTimer = setTimeout(() => doSearch(query.trim()), 200);
+}
+
+function doSearch(query) {
+  const q = query.toLowerCase();
+  const results = [];
+  chapters().forEach((ch, i) => {
+    const content = ch.content.toLowerCase();
+    const title = ch.title.toLowerCase();
+    if (content.includes(q) || title.includes(q)) {
+      // Find snippet
+      const idx = content.indexOf(q);
+      const start = Math.max(0, idx - 80);
+      const end = Math.min(ch.content.length, idx + 160);
+      let snippet = ch.content.slice(start, end).replace(/\s+/g, ' ').trim();
+      // Highlight
+      const re = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'), 'gi');
+      snippet = snippet.replace(re, m => `<mark>${esc(m)}</mark>`);
+      results.push({ chIdx: i, ch, snippet });
+    }
+  });
+
+  document.getElementById('chapterView').style.display = 'none';
+  const sr = document.getElementById('searchResults');
+  sr.style.display = 'block';
+  document.getElementById('srCount').textContent =
+    results.length === 0 ? 'Aucun résultat trouvé.' : `${results.length} résultat(s) dans ce manuel.`;
+  document.getElementById('srList').innerHTML = results.map(r => `
+    <div class="sr-card" onclick="showChapter(${r.chIdx});document.getElementById('searchInput').value=''">
+      <div class="sr-ch">CHAPITRE ${r.ch.num} — ${esc(r.ch.title)}</div>
+      <div class="sr-snippet">...${r.snippet}...</div>
+    </div>`).join('') || '';
+}
+
+// ── HELP ──
+function openHelp() {
+  document.getElementById('helpPanel').classList.add('open');
+}
+function closeHelp() {
+  document.getElementById('helpPanel').classList.remove('open');
+}
+
+// ── ADMIN ──
+const ADMIN_CREDS = { user: 'admin@insapt', pass: 'f0rteh' };
+let adminAuthenticated = false;
+
+function openAdminPanel() {
+  closeHelp();
+  document.getElementById('adminModal').style.display = 'flex';
+  setTimeout(() => document.getElementById('aUser').focus(), 50);
+}
+
+function closeAdminModal() {
+  document.getElementById('adminModal').style.display = 'none';
+  document.getElementById('aErr').style.display = 'none';
+  document.getElementById('aPass').value = '';
+}
+
+function doAdminLogin() {
+  const u = document.getElementById('aUser').value.trim();
+  const p = document.getElementById('aPass').value.trim();
+  if (u === ADMIN_CREDS.user && p === ADMIN_CREDS.pass) {
+    adminAuthenticated = true;
+    closeAdminModal();
+    openAdminDashboard();
+  } else {
+    document.getElementById('aErr').style.display = 'block';
+  }
+}
+
+function openAdminDashboard() {
+  // If backend URL is set, open in new tab
+  if (BACKEND_URL) {
+    window.open(BACKEND_URL + '?admin=1', '_blank');
+    return;
+  }
+  // Otherwise show inline admin view from localStorage
+  showInlineAdmin();
+}
+
+function showInlineAdmin() {
+  // Gather all local comments across all chapters and manuals
+  const all = [];
+  for (const key in comments) {
+    const [manual, chIdx] = key.split('_');
+    const chList = manual === 'cpa' ? CPA_CHAPTERS : NOCPA_CHAPTERS;
+    const ch = chList[parseInt(chIdx)] || {};
+    (comments[key] || []).forEach(c => {
+      all.push({ ...c, manual, chapterNum: ch.num, chapterTitle: ch.title });
+    });
+  }
+
+  // Sort: newest first (by date string — approximate)
+  all.reverse();
+
+  const overlay = document.createElement('div');
+  overlay.id = 'adminOverlay';
+  overlay.style.cssText = 'position:fixed;inset:0;background:#F7F8FA;z-index:250;overflow-y:auto;';
+
+  const counts = {
+    total: all.length,
+    submitted: all.filter(c => c.status === 'submitted').length,
+    local: all.filter(c => c.status !== 'submitted').length,
+    suggestion: all.filter(c => c.type === 'suggestion').length,
+    question: all.filter(c => c.type === 'question').length,
+    concern: all.filter(c => c.type === 'concern').length,
+  };
+
+  overlay.innerHTML = `
+    <div style="background:var(--navy);color:#fff;padding:16px 28px;display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--gold);">
+      <div>
+        <div style="font-weight:bold;font-size:16px;color:var(--gold);">Administration — Commentaires du Manuel</div>
+        <div style="font-size:11px;color:#8A99B3;margin-top:2px;">INSAPT · ${counts.total} commentaire(s) au total</div>
+      </div>
+      <div style="display:flex;gap:10px;">
+        <button onclick="exportLocalComments()" style="background:none;border:1px solid rgba(255,255,255,0.2);color:var(--goldlt);padding:6px 14px;border-radius:3px;cursor:pointer;font-size:12px;">⬇ Exporter CSV</button>
+        <button onclick="document.getElementById('adminOverlay').remove()" style="background:none;border:1px solid rgba(255,255,255,0.2);color:var(--goldlt);padding:6px 14px;border-radius:3px;cursor:pointer;font-size:12px;">✕ Fermer</button>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;padding:16px 28px;background:#fff;border-bottom:1px solid var(--line);flex-wrap:wrap;">
+      <div style="border:1px solid #FFC107;background:#FFF9E6;border-radius:20px;padding:6px 16px;font-size:12px;font-weight:bold;">
+        <span style="font-size:18px;color:var(--navy);">${counts.total}</span> Total
+      </div>
+      <div style="border:1px solid #2E7D32;background:#E3F0E3;border-radius:20px;padding:6px 16px;font-size:12px;font-weight:bold;">
+        <span style="font-size:18px;color:var(--navy);">${counts.submitted}</span> Transmis à l'admin
+      </div>
+      <div style="border:1px solid var(--line);background:var(--bg);border-radius:20px;padding:6px 16px;font-size:12px;">
+        💡 ${counts.suggestion} Suggestions &nbsp; ❓ ${counts.question} Questions &nbsp; ⚠️ ${counts.concern} Préoccupations
+      </div>
+      ${!BACKEND_URL ? '<div style="background:#FDF3E3;border:1px solid #FFC107;border-radius:4px;padding:6px 14px;font-size:12px;color:var(--warn);">⚠️ <strong>Mode local :</strong> Configurez BACKEND_URL pour activer la synchronisation.</div>' : ''}
+    </div>
+    <div style="padding:20px 28px;">
+      ${all.length === 0
+        ? '<div style="text-align:center;padding:60px;color:var(--gray);">Aucun commentaire enregistré pour le moment.</div>'
+        : all.map((c, i) => `
+        <div style="background:#fff;border:1px solid var(--line);border-radius:6px;margin-bottom:14px;overflow:hidden;${c.type==='concern'?'border-left:4px solid #FFC107':c.type==='suggestion'?'border-left:4px solid #2E7D32':'border-left:4px solid #1565C0'}">
+          <div style="background:var(--navy);color:#fff;padding:10px 18px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+            <div>
+              <div style="font-size:10px;color:var(--goldlt);font-family:monospace;">CMT-LOCAL-${String(i+1).padStart(3,'0')}</div>
+              <div style="font-weight:bold;font-size:14px;">${esc(c.name)}</div>
+              ${c.service ? `<div style="font-size:11px;color:#8A99B3">${esc(c.service)}</div>` : ''}
+            </div>
+            <span style="padding:3px 10px;border-radius:10px;font-size:10px;font-weight:bold;background:${c.type==='suggestion'?'#E3F0E3;color:#2E7D32':c.type==='question'?'#E3EDF8;color:#1565C0':'#FDF3E3;color:#856404'}">${c.type==='suggestion'?'💡 Suggestion':c.type==='question'?'❓ Question':'⚠️ Préoccupation'}</span>
+            <span style="padding:3px 10px;border-radius:10px;font-size:10px;font-weight:bold;background:${c.status==='submitted'?'#E3F0E3;color:#2E7D32':'#F0F0F0;color:#888'}">${c.status==='submitted'?'✓ Transmis':'Local uniquement'}</span>
+            <div style="font-size:11px;color:#8A99B3;margin-left:auto;">${c.date||''}</div>
+          </div>
+          <div style="padding:14px 18px;display:grid;grid-template-columns:1fr 1fr;gap:12px;font-size:13px;">
+            <div><div style="font-size:10px;font-weight:bold;color:var(--gold);text-transform:uppercase;margin-bottom:3px;">Version Manuel</div><div style="font-weight:bold;color:${c.manual==='cpa'?'var(--gold)':'#5B9BD5'}">${c.manual==='cpa'?'Version CPA':'Version Passation Directe'}</div></div>
+            <div><div style="font-size:10px;font-weight:bold;color:var(--gold);text-transform:uppercase;margin-bottom:3px;">Chapitre</div><div><strong>Ch.${c.chapterNum}</strong> — ${esc(c.chapterTitle||'')}</div></div>
+            <div style="grid-column:1/-1"><div style="font-size:10px;font-weight:bold;color:var(--gold);text-transform:uppercase;margin-bottom:3px;">Commentaire / Recommandation</div><div style="line-height:1.6">${esc(c.comment)}</div></div>
+            ${c.reason ? `<div style="grid-column:1/-1"><div style="font-size:10px;font-weight:bold;color:var(--gold);text-transform:uppercase;margin-bottom:3px;">Justification</div><div style="color:var(--gray);font-style:italic;line-height:1.6">${esc(c.reason)}</div></div>` : ''}
+            ${c.email ? `<div><div style="font-size:10px;font-weight:bold;color:var(--gold);text-transform:uppercase;margin-bottom:3px;">Contact</div><div><a href="mailto:${esc(c.email)}" style="color:var(--navy)">${esc(c.email)}</a></div></div>` : ''}
+          </div>
+        </div>`).join('')
+      }
+    </div>`;
+
+  document.body.appendChild(overlay);
+}
+
+window.exportLocalComments = function() {
+  const all = [];
+  const headers = ['ID','Date','Version','Chapitre N°','Titre Chapitre','Auteur','Service','Email','Type','Commentaire','Justification','Statut'];
+  let i = 1;
+  for (const key in comments) {
+    const [manual, chIdx] = key.split('_');
+    const chList = manual === 'cpa' ? CPA_CHAPTERS : NOCPA_CHAPTERS;
+    const ch = chList[parseInt(chIdx)] || {};
+    (comments[key] || []).forEach(c => {
+      all.push([
+        `CMT-LOCAL-${String(i++).padStart(3,'0')}`,
+        c.date||'', manual==='cpa'?'Version CPA':'Version Passation Directe',
+        ch.num||'', ch.title||'', c.name||'', c.service||'', c.email||'',
+        c.type||'', c.comment||'', c.reason||'', c.status||''
+      ]);
+    });
+  }
+  const csv = [headers, ...all].map(r => r.map(v => `"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'INSAPT_Commentaires_Manuel.csv'; a.click();
+  URL.revokeObjectURL(url);
+};
+
+function esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function showToast() {
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+</script>
+
+</body>
+</html>
